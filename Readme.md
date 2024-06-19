@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм»
 
 * Студент: [Дар Суворов](https://up.htmlacademy.ru/javascript/32/user/2344675).
-* Наставник:[Виктория  Никитина](https://htmlacademy.ru/profile/id1217273).
+* Наставник: [Виктория  Никитина](https://htmlacademy.ru/profile/id1217273).
 
 ---
 
