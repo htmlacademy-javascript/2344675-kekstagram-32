@@ -33,7 +33,7 @@ const MOCK_COMMENTS_AMOUNT_MIN = 0; // Мин. число комментарие
 const MOCK_COMMENTS_AMOUNT_MAX = 30; // Макс. число комментариев к фотографии.
 const MOCK_AVATAR_ID_MIN = 1; // Мин. ID аватара (может повторяться).
 const MOCK_AVATAR_ID_MAX = 6; // Макс. ID аватара (может повторяться).
-const MOCK_COMMENTS_TEXTS = [
+const MOCK_COMMENTS_PHRASES = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
@@ -41,6 +41,8 @@ const MOCK_COMMENTS_TEXTS = [
   'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ]
+const MOCK_COMMENT_PHRASES_NO_MIN = 1; // Мин. число фраз в моковом комментарии.
+const MOCK_COMMENT_PHRASES_NO_MAX = 2; // Макс. число фраз в моковом комментарии.
 const MOCK_USERNAMES = [
   'Анна',
   'Борис',
@@ -88,7 +90,7 @@ const getRandomInt = (a, b) => {
   return Math.floor(Math.random() * (to - from + 1) + from);
 };
 
-const getUniqueInt = (a, b) => { // ?? Можно ли выполнить стрелочней ф-ю?
+const getUniqueInt = (a, b) => {
   const usedValues = [];
 
   const from = Math.floor(Math.min(a, b));
@@ -111,6 +113,18 @@ const getUniqueInt = (a, b) => { // ?? Можно ли выполнить стр
 // Генератор случайного элемента массива.
 const getRandomArrayItem = (sourceArray) => sourceArray[getRandomInt(0, sourceArray.length - 1)];
 
+// Генератор текста мокового комментария.
+const getMockCommentMessage = () => {
+  let mockDescription = '';
+  if (MOCK_COMMENT_PHRASES_NO_MIN > 0) {
+    mockDescription = String(getRandomArrayItem(MOCK_COMMENTS_PHRASES));
+    for (let i = 1; i <= getRandomInt(MOCK_COMMENT_PHRASES_NO_MIN - 1, MOCK_COMMENT_PHRASES_NO_MAX - 1); i++) {
+      mockDescription = mockDescription + ' ' + MOCK_COMMENTS_PHRASES[i];
+    } // ?? Линтер: Unexpected string contatenation.
+  }
+  return mockDescription;
+}
+
 // ГЕНЕРАЦИЯ МОКОВЫХ ОБЪЕКТОВ
 
 // Задание сквозной нумерации ID
@@ -125,7 +139,7 @@ const createPhotoMock = () => {
   const getMockComment = () => ({
     'id': getNextCommentId(),
     'avatar': `img/avatar-${getRandomInt(MOCK_AVATAR_ID_MIN, MOCK_AVATAR_ID_MAX)}.svg`,
-    'message': getRandomArrayItem(MOCK_COMMENTS_TEXTS), // TODO: от одного до нескольких предложений в message, с использованием getUniqueInt.
+    'message': getMockCommentMessage(),
     'name': getRandomArrayItem(MOCK_USERNAMES)
   }
   );
