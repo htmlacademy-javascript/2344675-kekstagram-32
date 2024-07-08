@@ -68,25 +68,30 @@ const MOCK_USERNAMES = [
 // ПРОЦЕДУРЫ ДЛЯ МОКОВЫХ ДАННЫХ
 
 // Счетчик для сквозных нумераций.
-const getIncreasingInt = function() {
+const getIncreasingInt = () => {
   let counter = 0;
-  return function() { // ?? Можно ли сделать стрелочной ф-ей?
+  return () => {
     counter++;
     return counter;
   };
 };
+// ?? Если переписать так, то возвраты начинаются с 0:
+// const getIncreasingInt = () => {
+//   let counter = 0;
+//   return () => counter++;
+// };
 
 // Генераор случайных значений.
 const getRandomInt = (a, b) => {
-  const from = Math.floor(Math.min(a, b)); // ?? Неясно, зачем тут округлять вверх.
+  const from = Math.floor(Math.min(a, b));
   const to = Math.floor(Math.max(a, b));
   return Math.floor(Math.random() * (to - from + 1) + from);
 };
 
-function getUniqueInt(a, b) { // ?? Можно ли выполнить стрелочней ф-ю?
+const getUniqueInt = (a, b) => { // ?? Можно ли выполнить стрелочней ф-ю?
   const usedValues = [];
 
-  const from = Math.floor(Math.min(a, b)); // ?? Неясно, зачем тут округлять вверх.
+  const from = Math.floor(Math.min(a, b));
   const to = Math.floor(Math.max(a, b));
 
   return function() {
@@ -115,11 +120,10 @@ const getNextCommentId = getIncreasingInt(); // Сквозная нумерац�
 // Генерация  мокового фото
 const createPhotoMock = () => {
   const photoId = getNextPhotoId();
-  const commentId = getNextCommentId();
 
   // Генерация мокового комментария
   const getMockComment = () => ({
-    'id': commentId,
+    'id': getNextCommentId(),
     'avatar': `img/avatar-${getRandomInt(MOCK_AVATAR_ID_MIN, MOCK_AVATAR_ID_MAX)}.svg`,
     'message': getRandomArrayItem(MOCK_COMMENTS_TEXTS), // TODO: от одного до нескольких предложений в message, с использованием getUniqueInt.
     'name': getRandomArrayItem(MOCK_USERNAMES)
