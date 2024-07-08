@@ -33,23 +33,23 @@ function shortEnough2(stringToCompare, maxLength) {
   }
 }
 
-console.log('==================================');
-console.log('Функция для проверки длины строки:');
-console.log('==================================');
-console.log('Строка короче. Ожидается true, возвращается ', shortEnough('проверяемая строка', 20));
-console.log('Строка равна. Ожидается true, возвращается ', shortEnough('проверяемая строка', 18));
-console.log('Строка длиннее. Ожидается false, возвращается ', shortEnough('проверяемая строка', 10));
-console.log();
-shortEnough2('проверяемая строка', 20); // false
-shortEnough2('проверяемая строка', 18); // true
-shortEnough2('проверяемая строка', 10); // true
-shortEnough2(1234, 5); // false
-shortEnough2(1234, "5"); // false
-shortEnough2(1234, 4); // true
-shortEnough2(1234, "4"); // true
-shortEnough2(1234, 3); // true
-shortEnough2(1234, "3"); // true
-shortEnough2("1234", 3); // true
+// console.log('==================================');
+// console.log('Функция для проверки длины строки:');
+// console.log('==================================');
+// console.log('Строка короче. Ожидается true, возвращается ', shortEnough('проверяемая строка', 20));
+// console.log('Строка равна. Ожидается true, возвращается ', shortEnough('проверяемая строка', 18));
+// console.log('Строка длиннее. Ожидается false, возвращается ', shortEnough('проверяемая строка', 10));
+// console.log();
+// shortEnough2('проверяемая строка', 20); // false
+// shortEnough2('проверяемая строка', 18); // true
+// shortEnough2('проверяемая строка', 10); // true
+// shortEnough2(1234, 5); // false
+// shortEnough2(1234, "5"); // false
+// shortEnough2(1234, 4); // true
+// shortEnough2(1234, "4"); // true
+// shortEnough2(1234, 3); // true
+// shortEnough2(1234, "3"); // true
+// shortEnough2("1234", 3); // true
 
 
 // ============================================================================================
@@ -74,22 +74,22 @@ const isPalindrom = (stringToCheck) => {
   return(true);
 }
 
-function isPalindrom2(stringToCheck) {
+function isPalindrom2(stringToCheck1) {
   console.log();
-  console.log(stringToCheck);
+  console.log(stringToCheck1);
 
   // Подготовка входящих данных.
-  stringToCheck = String(stringToCheck); // Входная строка, приведена к типу string.
+  let stringToCheck = String(stringToCheck1); // Входная строка, приведена к типу string.
   let normalizedString = stringToCheck.toLowerCase(); // Подготовленная к анализу строка.
   // Очистка строки от не значимых символов.
   normalizedString = normalizedString.replaceAll(' ', '');
   // Очистка от остальных лишних символов.                                        ???: не работает эта фильтрация.
-  // const charactersExcluded = ' .,?!\"\'«»-–—_'; // Символы, которые не учитываются при анализе.
-  // for (let i = 0; i < charactersExcluded.length; i++) {
-  //   console.log(`Убираем символ "${charactersExcluded[i]}"`);
-  //   normalizedString.replaceAll(charactersExcluded[i], '');                    // ??? Удаляет всю нормализованную строку
-  //   console.log(normalizedString);
-  // }
+  const charactersExcluded = ' .,?!\"\'«»-–—_'; // Символы, которые не учитываются при анализе.
+  for (let i = 0; i < charactersExcluded.length; i++) {
+    console.log(`Убираем символ "${charactersExcluded[i]}"`);
+    normalizedString = normalizedString.replaceAll(charactersExcluded[i], '');                    // ??? Удаляет всю нормализованную строку
+    console.log(normalizedString);
+  }
   // Тестовый вывод подготовленной строки
   console.log('Нормализованная строка:');
   console.log(normalizedString);
@@ -141,13 +141,13 @@ isPalindrom2('SATOR - ROTAS'); // true
 // извлекает содержащиеся в ней цифры от 0 до 9 и возвращает их в виде целого положительного числа.
 // Если в строке нет ни одной цифры, возвращает NaN.
 
-let digits = (string) => {
-  console.log(`Входная строка: "${string}"`);
-  string = String(string);
-  digits = 0;
+const getDigits = (str) => {
+  console.log(`Входная строка: "${str}"`);
+  let string = String(str);
+  let digits = 0;
   for (let i = 0; i <= string.length - 1; i++) {
     // console.log('i = ', i, 'символ = ', string[i]);
-    if (Number.isNaN(parseInt(string[i], 10)) === false) {
+    if (!Number.isNaN(parseInt(string[i], 10))) {
       digits = digits * 10 + parseInt(string[i], 10);
       // console.log('результат: ', digits);
     }
@@ -167,14 +167,14 @@ console.log();
 console.log('==================================');
 console.log('Функция извлечения из строки цифр в виде числа:');
 console.log('==================================');
-digits('2023 год'); // 2023
-// digits('ECMAScript 2022'); // 2022                                 ???: выполнение ппадает, если вызвать вторую ф-ю с этим именем
-// digits('1 кефир, 0.5 батона'); // 105
-// digits('агент 007'); // 7
-// digits('а я томат'); // NaN
-// digits(2023); // 2023
-// digits(-1); // 1
-// digits(1.5); // 15
+getDigits('2023 год'); // 2023
+getDigits('ECMAScript 2022'); // 2022                                 ???: выполнение ппадает, если вызвать вторую ф-ю с этим именем
+getDigits('1 кефир, 0.5 батона'); // 105
+getDigits('агент 007'); // 7
+getDigits('а я томат'); // NaN
+getDigits(2023); // 2023
+getDigits(-1); // 1
+getDigits(1.5); // 15
 
 // ============================================================================================
 // "Задача врача Скорой помощи".
@@ -207,7 +207,7 @@ const findRoom = (target, entrances, floors, rooms) => {
 
 // Та же функция в одну строку, но без проверок:
 let findRoom2 = (target, entrances, floors, rooms) => {
-  console.log(`Ищем квартиру №`, target, `в доме на ${entrances} подъездов, ${floors} этажей, ${rooms} квартир на площадке.`, Math.ceil(target / (rooms * floors)), `подъезд,`, ((Math.ceil((Math.ceil(target - ((Math.ceil(target / (rooms * floors)) - 1) * (floors * rooms))) / rooms)))), `этаж.`);
+  console.log(`Ищем квартиру № ${target}, \n в доме на ${entrances} подъездов, \n ${floors} этажей,  \n ${rooms} квартир на площадке.,  \n ${Math.ceil(target / (rooms * floors))} подъезд, \n ${((Math.ceil((Math.ceil(target - ((Math.ceil(target / (rooms * floors)) - 1) * (floors * rooms))) / rooms))))} этаж.`);
 }
 
 console.log();
