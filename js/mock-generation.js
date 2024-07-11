@@ -82,7 +82,7 @@ const getMockCommentMessage = () => {
   if (MOCK_COMMENT_PHRASES_NO_MIN > 0) {
     mockDescription = String(getRandomArrayItem(MOCK_COMMENTS_PHRASES));
     for (let i = 1; i <= getRandomInt(MOCK_COMMENT_PHRASES_NO_MIN - 1, MOCK_COMMENT_PHRASES_NO_MAX - 1); i++) {
-      mockDescription = mockDescription + ' ' + MOCK_COMMENTS_PHRASES[i];
+      mockDescription += ` ${MOCK_COMMENTS_PHRASES[i]}`;
     } // ?? Линтер: Unexpected string contatenation.
   }
   return mockDescription;
