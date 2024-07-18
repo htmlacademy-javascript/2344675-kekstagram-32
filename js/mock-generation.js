@@ -120,3 +120,5 @@ const createPhotoMock = () => {
 
 const mockPosts = Array.from({length: MOCK_PHOOTOS_AMOUNT}, createPhotoMock);
 console.log(mockPosts);
+
+export {mockPosts};
