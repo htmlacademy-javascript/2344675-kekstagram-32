@@ -4,14 +4,15 @@ const posts = document.querySelector('.pictures'); // контейнер в ра
 const postTemplate = document.querySelector('#picture').content.querySelector('.picture'); // шаблон фото, исходный
 
 const drawThumbs = (source) => {
-  for (let i = 0; i < source.length; i++) {
-    const filledPost = postTemplate.cloneNode(true); // шаблон фото для наполнения, текущего - для заполнения
-    filledPost.querySelector('.picture__img').src = source[i].url;
-    filledPost.querySelector('.picture__img').alt = source[i].description;
-    filledPost.querySelector('.picture__likes').textContent = source[i].likes;
-    filledPost.querySelector('.picture__comments').textContent = source[i].comments.length;
-    posts.appendChild(filledPost);
-  };
+  source.forEach((filledPost) => {
+    const sourcePost = postTemplate.cloneNode(true); // шаблон фото - для заполнения
+    sourcePost.querySelector('.picture__img').src = filledPost.url;
+    sourcePost.querySelector('.picture__img').alt = filledPost.description;
+    sourcePost.querySelector('.picture__likes').textContent = filledPost.likes;
+    sourcePost.querySelector('.picture__comments').textContent = filledPost.comments.length;
+    posts.appendChild(sourcePost);
+  }
+  );
 };
 
 drawThumbs(mockPosts);
