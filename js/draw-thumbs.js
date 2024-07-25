@@ -10,9 +10,12 @@ const drawThumbs = (source) => {
     sourcePost.querySelector('.picture__img').alt = filledPost.description;
     sourcePost.querySelector('.picture__likes').textContent = filledPost.likes;
     sourcePost.querySelector('.picture__comments').textContent = filledPost.comments.length;
+    sourcePost.querySelector('.picture__img').dataset.id = filledPost.id;
     posts.appendChild(sourcePost);
   }
   );
 };
 
 drawThumbs(mockPosts);
+
+export {posts};
