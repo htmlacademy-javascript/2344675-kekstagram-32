@@ -8,12 +8,6 @@ const getIncreasingInt = () => {
     return counter;
   };
 };
-// ?? Если переписать так, то возвраты начинаются с 0:
-// const getIncreasingInt = () => {
-//   let counter = 0;
-//   // return () => (counter = counter + 1);
-//   return () => ++counter;
-// };
 export {getIncreasingInt};
 
 // Генераор случайных значений.
