@@ -5,30 +5,14 @@ const commentsShowmoreButton = fullCard.querySelector('.social__comments-loader'
 const commentsList = fullCard.querySelector('.social__comments');
 const commentTemplate = commentsList.querySelector('.social__comment');
 const fullCardBtnCancel = document.querySelector('.big-picture__cancel');
+const commentsBathSize = 5; // кол-во комментариев в "порции" дозагрузки
 
 // import {data} from './main.js'; // ?? вызывает ошибку - порядок выполнения модулей?
 import {mockPosts} from './mock-generation.js'; // используется вместо {data}
 const sourceData = mockPosts;
 
 
-// слушатели закрытия модалки
 
-const closeModal = () => {
-  pageBody.classList.remove('modal-open');
-  modal.classList.add('hidden');
-};
-
-const onCloseModalEsc = (evt) => {
-  if (evt.key === 'Escape') {
-    evt.preventDefault();
-    closeModal();
-  }
-};
-
-const onCloseModalBtn = () => {
-  closeModal();
-  document.removeEventListener('keydown', onCloseModalEsc);
-};
 
 
 // процедура отрисовки модалки с полноразмерным фото
@@ -56,30 +40,83 @@ const showModal = (evt) => {
     // проверяем, есть ли комменты к показу
     const commentsAll = clickedPost.comments; // (Collection)
     fullCard.querySelector('.social__comment-shown-count').textContent = 0;
-    if (commentsShown < clickedPost.comments.length) {
 
-      const commentsToShow = new DocumentFragment(); //
-      commentsAll.forEach((comment) => {
-        // Наполнение commentTemplate из comment
-        commentTemplate.querySelector('.social__picture').src = comment.avatar;
-        commentTemplate.querySelector('.social__picture').alt = comment.name;
-        commentTemplate.querySelector('.social__text').textContent = comment.message;
+    // // процедура дозагрузки комментариев
 
-        const commentToInsert = commentTemplate.cloneNode(true);
-        commentsShown++;
-        commentsToShow.appendChild(commentToInsert);
+    const loadMoreComments = () => {
+      if (commentsShown < clickedPost.comments.length) {
 
-        commentsList.appendChild(commentsToShow);
-        fullCard.querySelector('.social__comment-shown-count').textContent = commentsShown;
-      });
-    }
+        console.log('=====================');
+        console.log('Ф-Я loadMoreComments:');
+        // let commentsToShow = new DocumentFragment(); // текущая партия комментариев к выводу (наполняемый контейнер для результата)
+        // console.log('commentsToShow в начале ф-ции');
+        // console.log(commentsToShow);
+        let nextCommentsBatch = commentsAll.slice(commentsShown, commentsShown + commentsBathSize); // следующая часть комментариев для вывода из базы, до 5 шт.
+        console.log('Отобранный nextCommentsBatch:');
+        console.log(nextCommentsBatch);
 
-    // Скрываем/прячем кнопку
-    if (commentsShown === commentsAll.length) {
-      commentsShowmoreButton.hidden = true;
-    } else {
+        nextCommentsBatch.forEach((comment) => {
+          // Наполнение commentTemplate из comment
+          commentTemplate.querySelector('.social__picture').src = comment.avatar;
+          commentTemplate.querySelector('.social__picture').alt = comment.name;
+          // commentTemplate.querySelector('.social__text').textContent = comment.message;
+          commentTemplate.querySelector('.social__text').textContent = comment.id; // для отладки
+
+          const commentToInsert = commentTemplate.cloneNode(true); // заполненный комментарий
+          commentsShown++;
+          console.log(`commentsShown = ${commentsShown}`);
+          console.log(`Добавляем на страницу commentToInsert = ${comment.id}`);
+          // commentsToShow.appendChild(commentToInsert);
+          // commentsList.appendChild(commentsToShow);
+          commentsList.appendChild(commentToInsert);
+
+          fullCard.querySelector('.social__comment-shown-count').textContent = commentsShown;
+        });
+        // console.log('nextCommentsBatch после вставки:');
+        // console.log(nextCommentsBatch);
+        console.log('Отработанный nextCommentsBatch:');
+        console.log(nextCommentsBatch);
+        console.log('Очищаем nextCommentsBatch после вставки:');
+        nextCommentsBatch = [];
+        console.log(nextCommentsBatch);
+
+        // ?? нужно очистить commentsToShow / nextCommentsBatch
+      }
+
+      // Скрываем/прячем кнопку
+      if (commentsShown === commentsAll.length) {
+        commentsShowmoreButton.hidden = true;
+      } else {
+        commentsShowmoreButton.hidden = false;
+      }
+    };
+
+    commentsShowmoreButton.addEventListener('click', loadMoreComments);
+    // первую партию комментариев показываем принудительно
+    loadMoreComments();
+
+
+    // слушатели закрытия модалки
+
+    const closeModal = () => {
+      pageBody.classList.remove('modal-open');
+      modal.classList.add('hidden');
+      commentsShown = 0;
       commentsShowmoreButton.hidden = false;
-    }
+    };
+
+    const onCloseModalEsc = (evt) => {
+      if (evt.key === 'Escape') {
+        evt.preventDefault();
+        closeModal();
+      }
+    };
+
+    const onCloseModalBtn = () => {
+      closeModal();
+      document.removeEventListener('keydown', onCloseModalEsc);
+    };
+
 
     // показываем модалку
     pageBody.classList.add('modal-open');
@@ -88,6 +125,8 @@ const showModal = (evt) => {
     // добавляем слушатели закрытия модалки
     document.addEventListener('keydown', onCloseModalEsc, { once: true });
     fullCardBtnCancel.addEventListener('click', onCloseModalBtn);
+
   }
 };
+
 export {showModal};
