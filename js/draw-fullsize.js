@@ -103,6 +103,7 @@ const showModal = (evt) => {
       modal.classList.add('hidden');
       commentsShown = 0;
       commentsShowmoreButton.hidden = false;
+      commentsShowmoreButton.removeEventListener('click', loadMoreComments);
     };
 
     const onCloseModalEsc = (evt) => {
