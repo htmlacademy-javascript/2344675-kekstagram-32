@@ -1,5 +1,20 @@
 const posts = document.querySelector('.pictures');
 const postTemplate = document.querySelector('#picture').content.querySelector('.picture');
+const fullCardBtnCancel = document.querySelector('.big-picture__cancel');
+
+// import { data } from './main.js'; // ?? иначе ReferenceError в main.js:8
+import { mockPosts as data} from './mock-generation.js'; // взамен строки выше
+import {fillModal} from './draw-fullsize.js';
+import {onCloseModalBtn} from './draw-fullsize.js';
+
+const showModal = (evt) => {
+  const smallCard = evt.target.closest('.picture');
+  if (smallCard) {
+    const matchClicked = (element) => (String(element.id) === smallCard.dataset.id);
+    const clickedPost = data.find(matchClicked);
+    fillModal(clickedPost);
+  }
+};
 
 const drawThumbs = (source) => {
   source.forEach((filledPost) => {
@@ -12,10 +27,8 @@ const drawThumbs = (source) => {
     posts.appendChild(newThumb);
   }
   );
+  posts.addEventListener('click', showModal);
 };
+export {drawThumbs}; // вызывается из main.js
 
-export {posts, drawThumbs};
-
-// слушатель для открытия модалки
-import {showModal} from './draw-fullsize.js';
-posts.addEventListener('click', showModal);
+fullCardBtnCancel.addEventListener('click', onCloseModalBtn);
