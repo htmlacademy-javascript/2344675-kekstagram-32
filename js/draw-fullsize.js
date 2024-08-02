@@ -29,8 +29,6 @@ const onCloseModalBtn = () => {
 };
 export { onCloseModalBtn }; // вызывается из draw-thumbs.js
 
-// ===============================================================
-
 // // процедура дозагрузки комментариев
 const loadMoreComments = (clickedPost) => {
   const commentsAll = clickedPost.comments;
@@ -44,7 +42,7 @@ const loadMoreComments = (clickedPost) => {
       // Наполнение commentTemplate из comment
       commentTemplate.querySelector('.social__picture').src = comment.avatar;
       commentTemplate.querySelector('.social__picture').alt = comment.name;
-      commentTemplate.querySelector('.social__text').textContent = comment.id; // для отладки; должно быть = comment.message
+      commentTemplate.querySelector('.social__text').textContent = comment.message;
 
       commentsList.appendChild(commentTemplate.cloneNode(true)); // заполненный комментарий
       commentsShown++;
@@ -54,17 +52,11 @@ const loadMoreComments = (clickedPost) => {
   }
 
   // Скрываем/прячем кнопку
-  if (commentsShown === commentsAll.length) {
-    commentsShowmoreButton.hidden = true;
-  } else {
-    commentsShowmoreButton.hidden = false;
-  }
+  commentsShowmoreButton.hidden = commentsShown === commentsAll.length;
 };
 
-// ===============================================================
-
 // // процедура наполнения модаки
-const fillModal = (clickedPost) => {
+export const fillModal = (clickedPost) => {
 
   // заполняем модалку данными кликнутой миниатюры
   fullCard.querySelector('.big-picture__img img').src = clickedPost.url;
@@ -96,7 +88,6 @@ const fillModal = (clickedPost) => {
   // добавляем слушатели закрытия модалки
   document.addEventListener('keydown', onCloseModalEsc, { once: true });
 };
-export { fillModal }; // вызывается из dwar-thumbsjs
 
 // добавляем слушатель на кнопку для дозагрузки
 commentsShowmoreButton.addEventListener('click', () => {
@@ -104,3 +95,5 @@ commentsShowmoreButton.addEventListener('click', () => {
 });
 
 fullCardBtnCancel.addEventListener('click', onCloseModalBtn);
+
+// export { fillModal }; // вызывается из dwar-thumbsjs
