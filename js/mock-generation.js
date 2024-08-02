@@ -35,7 +35,7 @@ const MOCK_PHOTOS_DESCRIPTIONS = [
 const MOCK_LIKES_AMOUNT_MIN = 15; // Мин. число лайков на фотографии.
 const MOCK_LIKES_AMOUNT_MAX = 200; // Макс. число лайков на фотографии.
 const MOCK_COMMENTS_AMOUNT_MIN = 0; // Мин. число комментариев к фотографии.
-const MOCK_COMMENTS_AMOUNT_MAX = 10; // Макс. число комментариев к фотографии.
+const MOCK_COMMENTS_AMOUNT_MAX = 25; // Макс. число комментариев к фотографии.
 const MOCK_AVATAR_ID_MIN = 1; // Мин. ID аватара (может повторяться).
 const MOCK_AVATAR_ID_MAX = 6; // Макс. ID аватара (может повторяться).
 const MOCK_COMMENTS_PHRASES = [
@@ -117,6 +117,5 @@ const createPhotoMock = () => {
 // ГЕНЕРАЦИЯ НАБОРА МОКОВЫХ ФОТО
 
 const mockPosts = Array.from({length: MOCK_PHOOTOS_AMOUNT}, createPhotoMock);
-console.log(mockPosts);
 
 export {mockPosts};

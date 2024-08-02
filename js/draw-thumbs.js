@@ -1,7 +1,24 @@
 const posts = document.querySelector('.pictures');
 const postTemplate = document.querySelector('#picture').content.querySelector('.picture');
+const fullCardBtnCancel = document.querySelector('.big-picture__cancel');
 
-const drawThumbs = (source) => {
+import {fillModal} from './draw-fullsize.js';
+import {onCloseModalBtn} from './draw-fullsize.js';
+
+const localData = [];
+
+const showModal = (evt) => {
+  const smallCard = evt.target.closest('.picture');
+  if (smallCard) {
+    const matchClicked = (element) => (String(element.id) === smallCard.dataset.id);
+    const clickedPost = localData.find(matchClicked);
+    fillModal(clickedPost);
+  }
+};
+
+export const drawThumbs = (source) => {
+  localData.length = 0;
+  localData.push(...source.slice());
   source.forEach((filledPost) => {
     const newThumb = postTemplate.cloneNode(true);
     newThumb.querySelector('.picture__img').src = filledPost.url;
@@ -10,12 +27,9 @@ const drawThumbs = (source) => {
     newThumb.querySelector('.picture__comments').textContent = filledPost.comments.length;
     newThumb.dataset.id = filledPost.id;
     posts.appendChild(newThumb);
-  }
-  );
+  });
 };
 
-export {posts, drawThumbs};
-
-// слушатель для открытия модалки
-import {showModal} from './draw-fullsize.js';
 posts.addEventListener('click', showModal);
+
+fullCardBtnCancel.addEventListener('click', onCloseModalBtn);

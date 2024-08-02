@@ -5,17 +5,15 @@ const commentsShowmoreButton = fullCard.querySelector('.social__comments-loader'
 const commentsList = fullCard.querySelector('.social__comments');
 const commentTemplate = commentsList.querySelector('.social__comment');
 const fullCardBtnCancel = document.querySelector('.big-picture__cancel');
-
-// import {data} from './main.js'; // ?? вызывает ошибку - порядок выполнения модулей?
-import {mockPosts} from './mock-generation.js'; // используется вместо {data}
-const sourceData = mockPosts;
-
-
-// слушатели закрытия модалки
+const commentsBathSize = 5;
+let commentsShown = 0;
+let currentPost;
 
 const closeModal = () => {
   pageBody.classList.remove('modal-open');
   modal.classList.add('hidden');
+  commentsShown = 0;
+  commentsShowmoreButton.hidden = false;
 };
 
 const onCloseModalEsc = (evt) => {
@@ -29,65 +27,73 @@ const onCloseModalBtn = () => {
   closeModal();
   document.removeEventListener('keydown', onCloseModalEsc);
 };
+export { onCloseModalBtn }; // вызывается из draw-thumbs.js
 
+// // процедура дозагрузки комментариев
+const loadMoreComments = (clickedPost) => {
+  const commentsAll = clickedPost.comments;
 
-// процедура отрисовки модалки с полноразмерным фото
+  // проверяем, есть ли комменты к показу
+  if (commentsShown < clickedPost.comments.length) {
 
-const showModal = (evt) => {
-  const smallCard = evt.target.closest('.picture');
-  if (smallCard) {
+    let nextCommentsBatch = commentsAll.slice(commentsShown, commentsShown + commentsBathSize);
 
-    // заполняем модалку данными кликнутой миниатюры
-    const matchClicked = (element) => (String(element.id) === smallCard.dataset.id);
-    const clickedPost = sourceData.find(matchClicked);
+    nextCommentsBatch.forEach((comment) => {
+      // Наполнение commentTemplate из comment
+      commentTemplate.querySelector('.social__picture').src = comment.avatar;
+      commentTemplate.querySelector('.social__picture').alt = comment.name;
+      commentTemplate.querySelector('.social__text').textContent = comment.message;
 
-    fullCard.querySelector('.big-picture__img img').src = clickedPost.url;
-    fullCard.querySelector('.big-picture__img img').alt = clickedPost.description;
-    fullCard.querySelector('.social__caption').textContent = clickedPost.description;
-    fullCard.querySelector('.likes-count').textContent = clickedPost.likes;
-    fullCard.querySelector('.social__comment-total-count').textContent = clickedPost.comments.length;
-
-    // очищаем старые комментарии
-    let drawnComments = fullCard.querySelectorAll('.social__comment');
-    drawnComments.forEach((comment) => (comment.remove()));
-    let commentsShown = 0;
-    drawnComments = fullCard.querySelectorAll('.social__comment');
-
-    // проверяем, есть ли комменты к показу
-    const commentsAll = clickedPost.comments; // (Collection)
-    fullCard.querySelector('.social__comment-shown-count').textContent = 0;
-    if (commentsShown < clickedPost.comments.length) {
-
-      const commentsToShow = new DocumentFragment(); //
-      commentsAll.forEach((comment) => {
-        // Наполнение commentTemplate из comment
-        commentTemplate.querySelector('.social__picture').src = comment.avatar;
-        commentTemplate.querySelector('.social__picture').alt = comment.name;
-        commentTemplate.querySelector('.social__text').textContent = comment.message;
-
-        const commentToInsert = commentTemplate.cloneNode(true);
-        commentsShown++;
-        commentsToShow.appendChild(commentToInsert);
-
-        commentsList.appendChild(commentsToShow);
-        fullCard.querySelector('.social__comment-shown-count').textContent = commentsShown;
-      });
-    }
-
-    // Скрываем/прячем кнопку
-    if (commentsShown === commentsAll.length) {
-      commentsShowmoreButton.hidden = true;
-    } else {
-      commentsShowmoreButton.hidden = false;
-    }
-
-    // показываем модалку
-    pageBody.classList.add('modal-open');
-    modal.classList.remove('hidden');
-
-    // добавляем слушатели закрытия модалки
-    document.addEventListener('keydown', onCloseModalEsc, { once: true });
-    fullCardBtnCancel.addEventListener('click', onCloseModalBtn);
+      commentsList.appendChild(commentTemplate.cloneNode(true)); // заполненный комментарий
+      commentsShown++;
+      fullCard.querySelector('.social__comment-shown-count').textContent = commentsShown;
+    });
+    nextCommentsBatch = [];
   }
+
+  // Скрываем/прячем кнопку
+  commentsShowmoreButton.hidden = commentsShown === commentsAll.length;
 };
-export {showModal};
+
+// // процедура наполнения модаки
+export const fillModal = (clickedPost) => {
+
+  // заполняем модалку данными кликнутой миниатюры
+  fullCard.querySelector('.big-picture__img img').src = clickedPost.url;
+  fullCard.querySelector('.big-picture__img img').alt = clickedPost.description;
+  fullCard.querySelector('.social__caption').textContent = clickedPost.description;
+  fullCard.querySelector('.likes-count').textContent = clickedPost.likes;
+  fullCard.querySelector('.social__comment-total-count').textContent = clickedPost.comments.length;
+
+  // очищаем старые комментарии
+  commentsList.innerHTML = '';
+  commentsShown = 0;
+  fullCard.querySelector('.social__comment-shown-count').textContent = 0;
+
+  // первую партию комментариев показываем принудительно
+  loadMoreComments(clickedPost);
+
+  // передаем текущий пост в слуташель дозагрузки
+  currentPost = clickedPost;
+
+  // скрываем кнопку, если к посту нет комментариев
+  if (clickedPost.comments.length === 0) {
+    commentsShowmoreButton.hidden = true;
+  }
+
+  // показываем модалку
+  pageBody.classList.add('modal-open');
+  modal.classList.remove('hidden');
+
+  // добавляем слушатели закрытия модалки
+  document.addEventListener('keydown', onCloseModalEsc, { once: true });
+};
+
+// добавляем слушатель на кнопку для дозагрузки
+commentsShowmoreButton.addEventListener('click', () => {
+  loadMoreComments(currentPost);
+});
+
+fullCardBtnCancel.addEventListener('click', onCloseModalBtn);
+
+// export { fillModal }; // вызывается из dwar-thumbsjs
