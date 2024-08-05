@@ -22,22 +22,11 @@ const pristine = new Pristine(uploadForm, {
   errorTextClass: 'img-upload__field-wrapper--error',
 });
 
-const onFileChange = () => {
-  uploadOverlay.classList.remove('hidden');
-  pageBody.classList.add('modal-open');
-  document.addEventListener('keydown', onUploadCancelEsc, { once: true });
-};
-
 const closeUploadModal = () => {
   uploadForm.reset();
   pristine.reset();
   uploadOverlay.classList.add('hidden');
   pageBody.classList.remove('modal-open');
-  document.removeEventListener('keydown', onUploadCancelEsc);
-};
-
-const onUploadCancelBtn = () => {
-  closeUploadModal();
 };
 
 const onUploadCancelEsc = (evt) => {
@@ -45,6 +34,17 @@ const onUploadCancelEsc = (evt) => {
     evt.preventDefault();
     closeUploadModal();
   }
+};
+
+const onUploadCancelBtn = () => {
+  closeUploadModal();
+  document.removeEventListener('keydown', onUploadCancelEsc);
+};
+
+const onFileChange = () => {
+  uploadOverlay.classList.remove('hidden');
+  pageBody.classList.add('modal-open');
+  document.addEventListener('keydown', onUploadCancelEsc, { once: true });
 };
 
 const normalizeHashtags = (tagString) => tagString
