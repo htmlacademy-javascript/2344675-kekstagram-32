@@ -1,3 +1,9 @@
+import {scaleReset} from './upload-scale.js';
+import {
+  sliderInit,
+  resetEffect
+} from './effects.js';
+
 const MAX_HASHTAGS_COUNT = 5;
 const HASHTAD_ALLOWED_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
 const SPACELIKE_CHARS = /\s+/g;
@@ -25,6 +31,8 @@ const pristine = new Pristine(uploadForm, {
 const closeUploadModal = () => {
   uploadForm.reset();
   pristine.reset();
+  scaleReset();
+  resetEffect();
   uploadOverlay.classList.add('hidden');
   pageBody.classList.remove('modal-open');
   document.removeEventListener('keydown', onUploadCancelEsc);
@@ -45,6 +53,7 @@ const onUploadCancelBtn = () => {
 const onFileChange = () => {
   uploadOverlay.classList.remove('hidden');
   pageBody.classList.add('modal-open');
+  sliderInit();
   document.addEventListener('keydown', onUploadCancelEsc);
 };
 
