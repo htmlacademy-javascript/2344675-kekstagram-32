@@ -9,29 +9,27 @@ const SCALE_DEFAULT = 1;
 
 let scale = SCALE_DEFAULT;
 
-const applyScale = () => {
-  scalablePicture.style.transform = `scale(${scale})`;
-  scaleIndicator.value = `${scale * 100}%`;
+const applyScale = (scaleToApply) => {
+  scalablePicture.style.transform = `scale(${scaleToApply})`;
+  scaleIndicator.value = `${scaleToApply * 100}%`;
 };
 
 scaleDowmBtn.addEventListener('click', () => {
   if (scale > SCALE_MIN) {
     scale -= SCALE_STEP;
-    applyScale();
+    applyScale(scale);
   }
 });
 
 scaleUpBtn.addEventListener('click', () => {
   if (scale < SCALE_MAX) {
     scale += SCALE_STEP;
-    applyScale();
+    applyScale(scale);
   }
 });
 
 export const scaleReset = () => {
   scale = SCALE_DEFAULT;
-  applyScale();
-  scaleDowmBtn.disabled = 'false';
-  scaleUpBtn.disabled = 'false';
+  applyScale(SCALE_DEFAULT);
 };
 
