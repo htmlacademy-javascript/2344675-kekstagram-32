@@ -27,9 +27,10 @@ const closeUploadModal = () => {
   pristine.reset();
   uploadOverlay.classList.add('hidden');
   pageBody.classList.remove('modal-open');
+  document.removeEventListener('keydown', onUploadCancelEsc);
 };
 
-const onUploadCancelEsc = (evt) => {
+function onUploadCancelEsc(evt) {
   if (evt.key === 'Escape' && document.activeElement !== hashtagInput && document.activeElement !== commentInput) {
     evt.preventDefault();
     closeUploadModal();
@@ -44,7 +45,7 @@ const onUploadCancelBtn = () => {
 const onFileChange = () => {
   uploadOverlay.classList.remove('hidden');
   pageBody.classList.add('modal-open');
-  document.addEventListener('keydown', onUploadCancelEsc, { once: true });
+  document.addEventListener('keydown', onUploadCancelEsc);
 };
 
 const normalizeHashtags = (tagString) => tagString
