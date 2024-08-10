@@ -3,6 +3,7 @@ import {
   sliderInit,
   resetEffect
 } from './effects.js';
+import {proceedUpload} from './upload-form-sending.js';
 
 const MAX_HASHTAGS_COUNT = 5;
 const HASHTAD_ALLOWED_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
@@ -72,9 +73,13 @@ const hasUniqueTags = (value) => {
   return LowerCaseTags.length === new Set(LowerCaseTags).size;
 };
 
+
 const onUploadSubmit = (evt) => {
   evt.preventDefault();
-  pristine.validate();
+  if(pristine.validate()) {
+    proceedUpload(evt);
+    closeUploadModal();
+  }
 };
 
 pristine.addValidator(
@@ -105,3 +110,4 @@ uploadForm.addEventListener('submit', onUploadSubmit);
 
 
 // ===============================================================================================
+

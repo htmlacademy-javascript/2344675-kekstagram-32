@@ -1,6 +1,6 @@
 import { drawThumbs } from './draw-thumbs';
 
-const SERVER_URL = 'https://32.javascript.htmlacademy.pro/kekstagram/data';
+const SERVER_URL_DATA = 'https://32.javascript.htmlacademy.pro/kekstagram/data';
 
 const downloadErrorModalShowtime = 5000;
 const downloadErrorModalTemplate = document.querySelector('#data-error').content.querySelector('.data-error');
@@ -14,7 +14,7 @@ const showMsgDOwnloadFailure = () => {
 };
 
 export const getData = () =>{
-  fetch(SERVER_URL)
+  fetch(SERVER_URL_DATA)
     .then((response) => response.json())
     .then((posts) => drawThumbs(posts))
     .catch(() => showMsgDOwnloadFailure());
