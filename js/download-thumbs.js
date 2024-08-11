@@ -1,4 +1,5 @@
 import { drawThumbs } from './draw-thumbs';
+import { initThumbsSortControl } from './thumbs-sorting';
 
 const SERVER_URL_DATA = 'https://32.javascript.htmlacademy.pro/kekstagram/data';
 
@@ -17,6 +18,7 @@ export const getData = () =>{
   fetch(SERVER_URL_DATA)
     .then((response) => response.json())
     .then((posts) => drawThumbs(posts))
+    .then(() => initThumbsSortControl())
     .catch(() => showMsgDOwnloadFailure());
 };
 
