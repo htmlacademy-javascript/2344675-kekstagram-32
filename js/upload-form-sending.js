@@ -1,36 +1,33 @@
-const SERVER_URL_UPLOAD = 'https://32.javascript.htйmlacademy.pro/kekstagram';
+const SERVER_URL_UPLOAD = 'https://32.javascript.htmlacademy.pro/kekstagram';
 const submitBtn = document.querySelector('.img-upload__submit');
 const submitBtnDefaultText = submitBtn.textContent;
 
-const sendingMsgSuccess = document.querySelector('#success').content.cloneNode(true);
-const sendingMsgSuccessBtn = sendingMsgSuccess.querySelector('.success__button');
+const sendingMsgSuccessTemplate
+ = document.querySelector('#success').content;
+const sendingMsgSuccess
+ = sendingMsgSuccessTemplate.cloneNode(true);
+const sendingMsgSuccessBtn
+ = sendingMsgSuccess.querySelector('.success__button');
 
 const sendingMsgError = document.querySelector('#error').content.cloneNode(true);
 const sendingMsgErrorBtn = sendingMsgError.querySelector('.error__button');
 
 
-const submitBtnBlock = () => {
+const blockSubmitBtn = () => {
   submitBtn.disabled = true;
   submitBtn.textContent = 'Отправляется...';
 };
 
-const submitBtnUnblock = () => {
+const unblockSubmitBtn = () => {
   submitBtn.disabled = false;
   submitBtn.textContent = submitBtnDefaultText;
 };
 
-const CloseMsgPlateEsc = (evt, plate) => {
-  console.log(evt);
-  if (evt.key === 'Escape') {
-    console.log('Нажат Esc');
-
-  }
-};
-
 export const proceedUpload = (evt) => {
+  console.log('Запущен proceedUpload');
   const formData = new FormData(evt.target);
 
-  submitBtnBlock();
+  blockSubmitBtn();
 
   fetch(SERVER_URL_UPLOAD,
     {
@@ -41,13 +38,12 @@ export const proceedUpload = (evt) => {
     .then((response) => {
       if (response.ok) {
         document.body.appendChild(sendingMsgSuccess);
-
         const sendingMsgSuccessPlate = document.querySelector('.success');
+        // console.log(sendingMsgSuccessPlate); // ??? На второй итерации возвращает null
         sendingMsgSuccessBtn.addEventListener('click', () => {
           sendingMsgSuccessPlate.remove();
         });
-        submitBtnUnblock();
-        document.addEventListener('keydown', CloseMsgPlateEsc(evt, sendingMsgSuccessPlate));
+        unblockSubmitBtn();
       }
     })
     .catch(() => {
@@ -57,8 +53,7 @@ export const proceedUpload = (evt) => {
       sendingMsgErrorBtn.addEventListener('click', () => {
         sendingMsgErrorPlate.remove();
       });
-      submitBtnUnblock();
-      document.addEventListener('keydown', CloseMsgPlateEsc(evt, sendingMsgErrorPlate));
+      unblockSubmitBtn();
     });
 
 };
