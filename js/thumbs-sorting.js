@@ -9,37 +9,24 @@ const sortSwitchDefault = document.querySelector('#filter-default');
 const sortSwitchRandom = document.querySelector('#filter-random');
 const sortSwitchDiscussed = document.querySelector('#filter-discussed');
 
-let sortedThumbs = [];
-let thumbsOrderDefault = [];
-
 const indicateSorting = (active) => {
   sortSwitchDefault.classList.remove('img-filters__button--active');
   sortSwitchRandom.classList.remove('img-filters__button--active');
   sortSwitchDiscussed.classList.remove('img-filters__button--active');
   active.classList.add('img-filters__button--active');
-  thumbsOrderDefault = receivedPosts;
 };
 
 const redrawThumbs = (sorted) => {
-
-  // очищаем существующие миниатюры
   const presentThumbs = document.querySelectorAll('.picture');
-  // console.log(presentThumbs);
   presentThumbs.forEach((thumb) => {
-    // console.log(thumb);
     thumb.remove();
   });
-
-  // отрисовываем миниатюры из sorted;
   drawThumbs(sorted);
-
-
 };
 
 const sortThumbsDefault = (evt) => {
   indicateSorting(evt.target);
-  sortedThumbs = thumbsOrderDefault;
-  redrawThumbs(sortedThumbs);
+  redrawThumbs(receivedPosts);
 };
 
 const sortThumbsRandom = (evt) => {
@@ -47,9 +34,9 @@ const sortThumbsRandom = (evt) => {
   let randomizedPostsAmount = 0;
   const randomPosts = [];
   while (randomizedPostsAmount < RANDOM_POSTS_AMOUNT) {
-    const random = getRandomInt(0, thumbsOrderDefault.length - 1);
-    if (!randomPosts.includes(thumbsOrderDefault[random])) {
-      randomPosts.push(thumbsOrderDefault[random]);
+    const random = getRandomInt(0, receivedPosts.length - 1);
+    if (!randomPosts.includes(receivedPosts[random])) {
+      randomPosts.push(receivedPosts[random]);
       randomizedPostsAmount++;
     }
   }
@@ -65,7 +52,7 @@ const compareNumeric = (a, b) => {
 const sortThumbsDiscussed = (evt) => {
   indicateSorting(evt.target);
   // наполняем sortedThumbs отобранными фото:
-  // const discussedPosts = thumbsOrderDefault
+  // const discussedPosts = receivedPosts
   //                        .slice()
   //                        .sort(compareNumeric()) ????? аргументы? .comments.length
   //                        .reverse();
