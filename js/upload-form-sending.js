@@ -34,28 +34,16 @@ function closeMsgByEsc(evt) {
   document.removeEventListener('keydown', closeMsgByEsc);
 };
 
-// (временно) Закрытие плашки по кнопке
-// function closeMsgByBtn() {
-//   const plate = document.querySelector('.success') || document.querySelector('.error');
-//   plate.remove();
-// };
-
 function closeMsgByClick(evt) {
-  console.log('closeMsgByClick');
   const closeMsgBtn = document.querySelector('.success__button') || document.querySelector('.error__button');
-  const plate = document.querySelector('.success') || document.querySelector('.error');
-  console.log(plate);
-  if (evt.target === closeMsgBtn) {
-    console.log('Отрабатываем клик по кнопке или фону');
-    console.log(evt);
-
-
-    plate.remove();
-  } else [console.log('Клик не по кнопке/фону')];
+  const plate = document.querySelector('.success__inner') || document.querySelector('.error__inner');
+  const background = document.querySelector('.success') || document.querySelector('.error');
+  if ((evt.target === closeMsgBtn) || (evt.target !== plate)) {
+    background.remove();
+    document.removeEventListener('click', closeMsgByClick);
+  }
   document.removeEventListener('keydown', closeMsgByEsc);
 }
-
-
 
 
 export const proceedUpload = (evt) => {
@@ -72,12 +60,8 @@ export const proceedUpload = (evt) => {
       if (response.ok) {
         document.body.appendChild(successMessage);
         closeUploadModal();
-        const closeMsgBtn = document.querySelector('.success__button') || document.querySelector('.error__button');
-        // closeMsgBtn.addEventListener('click', closeMsgByBtn);
-        closeMsgBtn.addEventListener('click', closeMsgByClick);
-
+        document.addEventListener('click', closeMsgByClick);
         document.addEventListener('keydown', closeMsgByEsc);
-
       } else {
         throw new Error('Полученный ответ сервера <> "OK"');
       }
@@ -85,13 +69,10 @@ export const proceedUpload = (evt) => {
     .catch(() => {
       document.body.appendChild(errorMessage);
 
-      const closeMsgBtn = document.querySelector('.error__button') || document.querySelector('.error__button');
-      // closeMsgBtn.addEventListener('click', closeMsgByBtn);
-      closeMsgBtn.addEventListener('click', closeMsgByClick);
+      document.addEventListener('click', closeMsgByClick);
       document.addEventListener('keydown', closeMsgByEsc);
       clearFormListener();
-    }
-    )
+    })
     .finally (() => {
       unblockSubmitBtn();
     })
