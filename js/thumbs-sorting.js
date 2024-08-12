@@ -1,13 +1,16 @@
 import { drawThumbs } from "./draw-thumbs";
+import { receivedPosts } from './download-thumbs';
 import { getRandomInt } from "./utils";
+
+const RANDOM_POSTS_AMOUNT = 10;
 
 const sortControls = document.querySelector('.img-filters');
 const sortSwitchDefault = document.querySelector('#filter-default');
 const sortSwitchRandom = document.querySelector('#filter-random');
 const sortSwitchDiscussed = document.querySelector('#filter-discussed');
 
-const thumbsOrderDefault = document.querySelectorAll('.picture');
-let sortedThumbs = [];
+let currentSortingMode = 'default';
+sortSwitchDefault.disabled = true;
 
 const indicateSorting = (active) => {
   sortSwitchDefault.classList.remove('img-filters__button--active');
@@ -17,66 +20,54 @@ const indicateSorting = (active) => {
 };
 
 const redrawThumbs = (sorted) => {
-  console.log('redrawThumbs');
-
-  // очищаем существующие миниатюры
   const presentThumbs = document.querySelectorAll('.picture');
-  // console.log(presentThumbs);
   presentThumbs.forEach((thumb) => {
-    // console.log(thumb);
     thumb.remove();
   });
-
-  // отрисовываем миниатюры из sorted;
   drawThumbs(sorted);
-
-
 };
 
 const sortThumbsDefault = (evt) => {
-  indicateSorting(evt.target);
-  sortedThumbs = thumbsOrderDefault;
-  redrawThumbs(sortedThumbs);
+  if (currentSortingMode !== 'default') {
+    indicateSorting(evt.target);
+    redrawThumbs(receivedPosts);
+    sortSwitchDefault.disabled = true;
+    sortSwitchDiscussed.disabled = false;
+  }
+  currentSortingMode = 'default';
 };
 
 const sortThumbsRandom = (evt) => {
+  sortSwitchDefault.disabled = false;
+  sortSwitchDiscussed.disabled = false;
   indicateSorting(evt.target);
-  // наполняем sortedThumbs случайными фото:
-  //   генерируем randomPosts - массив N случайных уникальных чисел от 0 до (thumbsOrderDefault.length - 1):
-  //   const N = 10;
-  //   let pushed = 0;
-  //   let randomPosts = [];
-  //   while (pushed < N) {
-  //     const random = getRandomInt(0, thumbsOrderDefault.length);
-  //     if (!randomPosts.has(thumbsOrderDefault[random]) {
-  //       randomPosts.push(thumbsOrderDefault[random]);
-  //       pushed++;
-  //     };
-  //   randomPostsIndexes.forEach(item) => {
-  //     sortedThumbs.push(thumbsOrderDefault[item]);
-  //   });
-
-  redrawThumbs(sortedThumbs);
+  let randomizedPostsAmount = 0;
+  const randomPosts = [];
+  while (randomizedPostsAmount < RANDOM_POSTS_AMOUNT) {
+    const random = getRandomInt(0, receivedPosts.length - 1);
+    if (!randomPosts.includes(receivedPosts[random])) {
+      randomPosts.push(receivedPosts[random]);
+      randomizedPostsAmount++;
+    }
+  }
+  redrawThumbs(randomPosts);
+  sortSwitchDefault.disabled = false;
+  currentSortingMode = 'random';
 };
 
-const compareNumeric = (a, b) => {
-  if (a > b) return 1;
-  if (a == b) return 0;
-  if (a < b) return -1;
-};
+const sortPhotosByComments = (postA, postB) => postB.comments.length - postA.comments.length;
 
 const sortThumbsDiscussed = (evt) => {
-  indicateSorting(evt.target);
-  // наполняем sortedThumbs отобранными фото:
-  // const discussedPosts = thumbsOrderDefault
-  //                        .slice()
-  //                        .sort(compareNumeric()) ????? аргументы? .comments.length
-  //                        .reverse();
-  //  discussedPosts.forEach(item) => {
-  //    sortedThumbs.push(item);
-  //  });
-
-  redrawThumbs(sortedThumbs);
+  if (currentSortingMode !== 'discussed') {
+    sortSwitchDefault.disabled = false;
+    sortSwitchDiscussed.disabled = true;
+    indicateSorting(evt.target);
+    const discussedPosts = receivedPosts
+      .slice()
+      .sort(sortPhotosByComments);
+    redrawThumbs(discussedPosts);
+  }
+  currentSortingMode = 'discussed';
 };
 
 export const initThumbsSortControl = () => {
