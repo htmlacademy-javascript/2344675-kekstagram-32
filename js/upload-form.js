@@ -3,6 +3,7 @@ import {
   sliderInit,
   resetEffect
 } from './effects.js';
+import {proceedUpload} from './upload-form-sending.js';
 
 const MAX_HASHTAGS_COUNT = 5;
 const HASHTAD_ALLOWED_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
@@ -12,6 +13,7 @@ const VALIDATE_ERROR_MESSAGES = {
   MISMATCH_PATTERN: 'Только буквы и цифры, до 19 знаков после «#»',
   NOT_UNIQUE: 'Хештеги не должны повторяться',
 };
+const PHOTO_TYPES = ['png', 'jpg', 'jpeg'];
 
 const pageBody = document.querySelector('body');
 const uploadForm = document.querySelector('.img-upload__form');
@@ -20,7 +22,9 @@ const uploadCancelUploadBtn = document.querySelector('.img-upload__cancel');
 const uploadFileInput = document.querySelector('.img-upload__input');
 const hashtagInput = document.querySelector('.text__hashtags');
 const commentInput = document.querySelector('.text__description');
-
+const fileField = document.querySelector('.img-upload__input');
+const photoPreview = document.querySelector('.img-upload__preview img');
+const effectsPreviews = document.querySelectorAll('.effects__preview');
 
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
@@ -28,7 +32,15 @@ const pristine = new Pristine(uploadForm, {
   errorTextClass: 'img-upload__field-wrapper--error',
 });
 
-const closeUploadModal = () => {
+export const clearFormListener = () => {
+  document.removeEventListener('keydown', onUploadCancelEsc);
+};
+
+export const addFormListener = () => {
+  document.addEventListener('keydown', onUploadCancelEsc);
+}
+
+export const closeUploadModal = () => {
   uploadForm.reset();
   pristine.reset();
   scaleReset();
@@ -50,9 +62,22 @@ const onUploadCancelBtn = () => {
   document.removeEventListener('keydown', onUploadCancelEsc);
 };
 
+const isValidType = (file) => {
+  const fileName = file.name.toLowerCase();
+  return PHOTO_TYPES.some((fileExtention) => fileName.endsWith(fileExtention));
+};
+
 const onFileChange = () => {
   uploadOverlay.classList.remove('hidden');
   pageBody.classList.add('modal-open');
+  const file = fileField.files[0];
+  if (file && isValidType(file)) {
+    photoPreview.src = URL.createObjectURL(file);
+    effectsPreviews.forEach((preview) => {
+      preview.style.backgroundImage = `url('${photoPreview.src}')`;
+    });
+  }
+
   sliderInit();
   document.addEventListener('keydown', onUploadCancelEsc);
 };
@@ -72,9 +97,13 @@ const hasUniqueTags = (value) => {
   return LowerCaseTags.length === new Set(LowerCaseTags).size;
 };
 
+
 const onUploadSubmit = (evt) => {
   evt.preventDefault();
-  pristine.validate();
+  if(pristine.validate()) {
+    proceedUpload(evt);
+    // closeUploadModal();
+  }
 };
 
 pristine.addValidator(
@@ -105,3 +134,4 @@ uploadForm.addEventListener('submit', onUploadSubmit);
 
 
 // ===============================================================================================
+
