@@ -1,3 +1,4 @@
+import {closeUploadModal, clearFormListener, addFormListener} from './upload-form.js';
 const SERVER_URL_UPLOAD = 'https://32.javascript.htmlacademy.pro/kekstagram';
 const submitBtn = document.querySelector('.img-upload__submit');
 const submitBtnDefaultText = submitBtn.textContent;
@@ -21,23 +22,23 @@ const unblockSubmitBtn = () => {
 
 
 function closeMsgByEsc(evt) {
-  console.log(evt);
   if (evt.key === 'Escape') {
-    console.log ('Нажат Esc');
     evt.preventDefault();
     const plate = document.querySelector('.success') || document.querySelector('.error');
-    console.log(plate);
+    if(document.querySelector('.error')){
+      document.addEventListener('keydown', addFormListener)
+    }
     plate.remove();
-    // удалить слушатель клика
-    // удалить слушатель Esc
-  } else {console.log('Нажат не Esc')}
+
+  }
+  document.removeEventListener('keydown', closeMsgByEsc);
 };
 
 // (временно) Закрытие плашки по кнопке
-function closeMsgByBtn() {
-  const plate = document.querySelector('.success') || document.querySelector('.error');
-  plate.remove();
-};
+// function closeMsgByBtn() {
+//   const plate = document.querySelector('.success') || document.querySelector('.error');
+//   plate.remove();
+// };
 
 function closeMsgByClick(evt) {
   console.log('closeMsgByClick');
@@ -51,6 +52,7 @@ function closeMsgByClick(evt) {
 
     plate.remove();
   } else [console.log('Клик не по кнопке/фону')];
+  document.removeEventListener('keydown', closeMsgByEsc);
 }
 
 
@@ -69,21 +71,12 @@ export const proceedUpload = (evt) => {
     .then((response) => {
       if (response.ok) {
         document.body.appendChild(successMessage);
-
-        // (временно) вешаем слушатель на только кнопку
+        closeUploadModal();
         const closeMsgBtn = document.querySelector('.success__button') || document.querySelector('.error__button');
-        closeMsgBtn.addEventListener('click', closeMsgByBtn);
+        // closeMsgBtn.addEventListener('click', closeMsgByBtn);
+        closeMsgBtn.addEventListener('click', closeMsgByClick);
 
-        // вешаем слушатель Esc на документ:
-        //   console.log('Добавляем слушатель Esc');
-        // document.addEventListener('keydown', closeMsgByEsc(evt));
-        //   удалить плашку
-        //   удалить слушатель клика по кнопке/фону с документа
-
-        // вешаем слушатель на документ (клик на кнопку/фон плашки успеха):
-        document.addEventListener('click', closeMsgByClick(evt));
-        //   удалить плашку
-        //   удалить слушатель Esc с документа
+        document.addEventListener('keydown', closeMsgByEsc);
 
       } else {
         throw new Error('Полученный ответ сервера <> "OK"');
@@ -92,10 +85,11 @@ export const proceedUpload = (evt) => {
     .catch(() => {
       document.body.appendChild(errorMessage);
 
-      // (временно) вешаем слушатель на только кнопку
       const closeMsgBtn = document.querySelector('.error__button') || document.querySelector('.error__button');
-      closeMsgBtn.addEventListener('click', closeMsgByBtn);
-
+      // closeMsgBtn.addEventListener('click', closeMsgByBtn);
+      closeMsgBtn.addEventListener('click', closeMsgByClick);
+      document.addEventListener('keydown', closeMsgByEsc);
+      clearFormListener();
     }
     )
     .finally (() => {

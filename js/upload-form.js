@@ -32,7 +32,15 @@ const pristine = new Pristine(uploadForm, {
   errorTextClass: 'img-upload__field-wrapper--error',
 });
 
-const closeUploadModal = () => {
+export const clearFormListener = () => {
+  document.removeEventListener('keydown', onUploadCancelEsc);
+};
+
+export const addFormListener = () => {
+  document.addEventListener('keydown', onUploadCancelEsc);
+}
+
+export const closeUploadModal = () => {
   uploadForm.reset();
   pristine.reset();
   scaleReset();
@@ -94,7 +102,7 @@ const onUploadSubmit = (evt) => {
   evt.preventDefault();
   if(pristine.validate()) {
     proceedUpload(evt);
-    closeUploadModal();
+    // closeUploadModal();
   }
 };
 
