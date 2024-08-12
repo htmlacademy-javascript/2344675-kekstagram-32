@@ -2,6 +2,8 @@ import { drawThumbs } from "./draw-thumbs";
 import { receivedPosts } from './download-thumbs';
 import { getRandomInt } from "./utils";
 
+const RANDOM_POSTS_AMOUNT = 10;
+
 const sortControls = document.querySelector('.img-filters');
 const sortSwitchDefault = document.querySelector('#filter-default');
 const sortSwitchRandom = document.querySelector('#filter-random');
@@ -42,22 +44,16 @@ const sortThumbsDefault = (evt) => {
 
 const sortThumbsRandom = (evt) => {
   indicateSorting(evt.target);
-  // наполняем sortedThumbs случайными фото:
-  //   генерируем randomPosts - массив N случайных уникальных чисел от 0 до (thumbsOrderDefault.length - 1):
-  //   const N = 10;
-  //   let pushed = 0;
-  //   let randomPosts = [];
-  //   while (pushed < N) {
-  //     const random = getRandomInt(0, thumbsOrderDefault.length);
-  //     if (!randomPosts.has(thumbsOrderDefault[random]) {
-  //       randomPosts.push(thumbsOrderDefault[random]);
-  //       pushed++;
-  //     };
-  //   randomPostsIndexes.forEach(item) => {
-  //     sortedThumbs.push(thumbsOrderDefault[item]);
-  //   });
-
-  redrawThumbs(sortedThumbs);
+  let randomizedPostsAmount = 0;
+  const randomPosts = [];
+  while (randomizedPostsAmount < RANDOM_POSTS_AMOUNT) {
+    const random = getRandomInt(0, thumbsOrderDefault.length - 1);
+    if (!randomPosts.includes(thumbsOrderDefault[random])) {
+      randomPosts.push(thumbsOrderDefault[random]);
+      randomizedPostsAmount++;
+    }
+  }
+  redrawThumbs(randomPosts);
 };
 
 const compareNumeric = (a, b) => {
