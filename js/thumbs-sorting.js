@@ -29,14 +29,17 @@ const redrawThumbs = (sorted) => {
 
 const sortThumbsDefault = (evt) => {
   if (currentSortingMode !== 'default') {
-    sortSwitchDefault.disabled = true;
     indicateSorting(evt.target);
     redrawThumbs(receivedPosts);
+    sortSwitchDefault.disabled = true;
+    sortSwitchDiscussed.disabled = false;
   }
   currentSortingMode = 'default';
 };
 
 const sortThumbsRandom = (evt) => {
+  sortSwitchDefault.disabled = false;
+  sortSwitchDiscussed.disabled = false;
   indicateSorting(evt.target);
   let randomizedPostsAmount = 0;
   const randomPosts = [];
@@ -52,25 +55,18 @@ const sortThumbsRandom = (evt) => {
   currentSortingMode = 'random';
 };
 
-const compareNumeric = (a, b) => {
-  if (a > b) return 1;
-  if (a == b) return 0;
-  if (a < b) return -1;
-};
+const sortPhotosByComments = (postA, postB) => postB.comments.length - postA.comments.length;
 
 const sortThumbsDiscussed = (evt) => {
-  indicateSorting(evt.target);
-  // наполняем sortedThumbs отобранными фото:
-  // const discussedPosts = receivedPosts
-  //                        .slice()
-  //                        .sort(compareNumeric()) ????? аргументы? .comments.length
-  //                        .reverse();
-  //  discussedPosts.forEach(item) => {
-  //    sortedThumbs.push(item);
-  //  });
-
-  redrawThumbs(receivedPosts);
-  sortSwitchDefault.disabled = false;
+  if (currentSortingMode !== 'discussed') {
+    sortSwitchDefault.disabled = false;
+    sortSwitchDiscussed.disabled = true;
+    indicateSorting(evt.target);
+    const discussedPosts = receivedPosts
+      .slice()
+      .sort(sortPhotosByComments);
+    redrawThumbs(discussedPosts);
+  }
   currentSortingMode = 'discussed';
 };
 
