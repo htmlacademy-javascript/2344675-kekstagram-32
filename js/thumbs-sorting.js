@@ -9,6 +9,9 @@ const sortSwitchDefault = document.querySelector('#filter-default');
 const sortSwitchRandom = document.querySelector('#filter-random');
 const sortSwitchDiscussed = document.querySelector('#filter-discussed');
 
+let currentSortingMode = 'default';
+sortSwitchDefault.disabled = true;
+
 const indicateSorting = (active) => {
   sortSwitchDefault.classList.remove('img-filters__button--active');
   sortSwitchRandom.classList.remove('img-filters__button--active');
@@ -25,8 +28,12 @@ const redrawThumbs = (sorted) => {
 };
 
 const sortThumbsDefault = (evt) => {
-  indicateSorting(evt.target);
-  redrawThumbs(receivedPosts);
+  if (currentSortingMode !== 'default') {
+    sortSwitchDefault.disabled = true;
+    indicateSorting(evt.target);
+    redrawThumbs(receivedPosts);
+  }
+  currentSortingMode = 'default';
 };
 
 const sortThumbsRandom = (evt) => {
@@ -41,6 +48,8 @@ const sortThumbsRandom = (evt) => {
     }
   }
   redrawThumbs(randomPosts);
+  sortSwitchDefault.disabled = false;
+  currentSortingMode = 'random';
 };
 
 const compareNumeric = (a, b) => {
@@ -60,7 +69,9 @@ const sortThumbsDiscussed = (evt) => {
   //    sortedThumbs.push(item);
   //  });
 
-  redrawThumbs(sortedThumbs);
+  redrawThumbs(receivedPosts);
+  sortSwitchDefault.disabled = false;
+  currentSortingMode = 'discussed';
 };
 
 export const initThumbsSortControl = () => {
