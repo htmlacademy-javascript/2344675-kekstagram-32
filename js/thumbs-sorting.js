@@ -1,4 +1,5 @@
 import { drawThumbs } from "./draw-thumbs";
+import { receivedPosts } from './download-thumbs';
 import { getRandomInt } from "./utils";
 
 const sortControls = document.querySelector('.img-filters');
@@ -6,18 +7,18 @@ const sortSwitchDefault = document.querySelector('#filter-default');
 const sortSwitchRandom = document.querySelector('#filter-random');
 const sortSwitchDiscussed = document.querySelector('#filter-discussed');
 
-const thumbsOrderDefault = document.querySelectorAll('.picture');
 let sortedThumbs = [];
+let thumbsOrderDefault = [];
 
 const indicateSorting = (active) => {
   sortSwitchDefault.classList.remove('img-filters__button--active');
   sortSwitchRandom.classList.remove('img-filters__button--active');
   sortSwitchDiscussed.classList.remove('img-filters__button--active');
   active.classList.add('img-filters__button--active');
+  thumbsOrderDefault = receivedPosts;
 };
 
 const redrawThumbs = (sorted) => {
-  console.log('redrawThumbs');
 
   // очищаем существующие миниатюры
   const presentThumbs = document.querySelectorAll('.picture');

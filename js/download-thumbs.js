@@ -14,10 +14,15 @@ const showMsgDOwnloadFailure = () => {
   }, downloadErrorModalShowtime);
 };
 
+export let receivedPosts = [];
+
 export const getData = () =>{
   fetch(SERVER_URL_DATA)
     .then((response) => response.json())
-    .then((posts) => drawThumbs(posts))
+    .then((posts) => {
+      drawThumbs(posts);
+      receivedPosts = posts;
+    })
     .then(() => initThumbsSortControl())
     .catch(() => showMsgDOwnloadFailure());
 };
