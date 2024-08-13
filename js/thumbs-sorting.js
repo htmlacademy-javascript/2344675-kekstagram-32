@@ -1,8 +1,11 @@
 import { drawThumbs } from './draw-thumbs';
 import { receivedPosts } from './download-thumbs';
-import { getRandomInt } from './utils';
+import {
+  getRandomInt,
+  debounce } from './utils';
 
 const RANDOM_POSTS_AMOUNT = 10;
+const DEBOUNCE_TIME = 500;
 
 const sortControls = document.querySelector('.img-filters');
 const sortSwitchDefault = document.querySelector('#filter-default');
@@ -74,6 +77,6 @@ const sortThumbsDiscussed = (evt) => {
 export const initThumbsSortControl = () => {
   sortControls.classList.remove('img-filters--inactive');
   sortSwitchDefault.addEventListener('click', sortThumbsDefault);
-  sortSwitchRandom.addEventListener('click', sortThumbsRandom);
+  sortSwitchRandom.addEventListener('click', debounce((evt) => sortThumbsRandom(evt)), DEBOUNCE_TIME);
   sortSwitchDiscussed.addEventListener('click', sortThumbsDiscussed);
 };
