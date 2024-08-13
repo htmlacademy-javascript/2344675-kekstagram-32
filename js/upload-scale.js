@@ -1,11 +1,12 @@
-const scaleIndicator = document.querySelector('.scale__control--value');
-const scaleDowmBtn = document.querySelector('.scale__control--smaller');
-const scaleUpBtn = document.querySelector('.scale__control--bigger');
-const scalablePicture = document.querySelector('.img-upload__preview img');
 const SCALE_MIN = 0.25;
 const SCALE_MAX = 1;
 const SCALE_STEP = 0.25;
 const SCALE_DEFAULT = 1;
+
+const scaleIndicator = document.querySelector('.scale__control--value');
+const scaleDowmBtn = document.querySelector('.scale__control--smaller');
+const scaleUpBtn = document.querySelector('.scale__control--bigger');
+const scalablePicture = document.querySelector('.img-upload__preview img');
 
 let scale = SCALE_DEFAULT;
 
@@ -32,4 +33,3 @@ export const scaleReset = () => {
   scale = SCALE_DEFAULT;
   applyScale(SCALE_DEFAULT);
 };
-

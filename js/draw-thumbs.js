@@ -1,10 +1,9 @@
-const posts = document.querySelector('.pictures');
-const postTemplate = document.querySelector('#picture').content.querySelector('.picture');
-const fullCardBtnCancel = document.querySelector('.big-picture__cancel');
-
 import {fillModal} from './draw-fullsize.js';
 import {onCloseModalBtn} from './draw-fullsize.js';
 
+const posts = document.querySelector('.pictures');
+const postTemplate = document.querySelector('#picture').content.querySelector('.picture');
+const fullCardBtnCancel = document.querySelector('.big-picture__cancel');
 const localData = [];
 
 const showModal = (evt) => {

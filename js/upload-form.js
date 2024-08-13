@@ -38,7 +38,7 @@ export const clearFormListener = () => {
 
 export const addFormListener = () => {
   document.addEventListener('keydown', onUploadCancelEsc);
-}
+};
 
 export const closeUploadModal = () => {
   uploadForm.reset();
@@ -55,7 +55,7 @@ function onUploadCancelEsc(evt) {
     evt.preventDefault();
     closeUploadModal();
   }
-};
+}
 
 const onUploadCancelBtn = () => {
   closeUploadModal();
@@ -83,10 +83,10 @@ const onFileChange = () => {
 };
 
 const normalizeHashtags = (tagString) => tagString
-.replaceAll(SPACELIKE_CHARS, ' ')
-.trim()
-.split(' ')
-.filter((tag) => Boolean(tag.length));
+  .replaceAll(SPACELIKE_CHARS, ' ')
+  .trim()
+  .split(' ')
+  .filter((tag) => Boolean(tag.length));
 
 const hasValidTags = (value) => normalizeHashtags(value).every((tag) => HASHTAD_ALLOWED_SYMBOLS.test(tag));
 
@@ -97,12 +97,10 @@ const hasUniqueTags = (value) => {
   return LowerCaseTags.length === new Set(LowerCaseTags).size;
 };
 
-
 const onUploadSubmit = (evt) => {
   evt.preventDefault();
   if(pristine.validate()) {
     proceedUpload(evt);
-    // closeUploadModal();
   }
 };
 
@@ -131,7 +129,3 @@ pristine.addValidator(
 uploadFileInput.addEventListener('change', onFileChange);
 uploadCancelUploadBtn.addEventListener('click', onUploadCancelBtn);
 uploadForm.addEventListener('submit', onUploadSubmit);
-
-
-// ===============================================================================================
-

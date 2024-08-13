@@ -1,6 +1,6 @@
-import { drawThumbs } from "./draw-thumbs";
+import { drawThumbs } from './draw-thumbs';
 import { receivedPosts } from './download-thumbs';
-import { getRandomInt } from "./utils";
+import { getRandomInt } from './utils';
 
 const RANDOM_POSTS_AMOUNT = 10;
 
@@ -10,6 +10,7 @@ const sortSwitchRandom = document.querySelector('#filter-random');
 const sortSwitchDiscussed = document.querySelector('#filter-discussed');
 
 let currentSortingMode = 'default';
+
 sortSwitchDefault.disabled = true;
 
 const indicateSorting = (active) => {
