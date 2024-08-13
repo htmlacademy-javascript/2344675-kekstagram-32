@@ -33,11 +33,11 @@ const pristine = new Pristine(uploadForm, {
 });
 
 export const clearFormListener = () => {
-  document.removeEventListener('keydown', onUploadCancelEsc);
+  document.removeEventListener('keydown', onUploadEsc);
 };
 
 export const addFormListener = () => {
-  document.addEventListener('keydown', onUploadCancelEsc);
+  document.addEventListener('keydown', onUploadEsc);
 };
 
 export const closeUploadModal = () => {
@@ -47,10 +47,10 @@ export const closeUploadModal = () => {
   resetEffect();
   uploadOverlay.classList.add('hidden');
   pageBody.classList.remove('modal-open');
-  document.removeEventListener('keydown', onUploadCancelEsc);
+  document.removeEventListener('keydown', onUploadEsc);
 };
 
-function onUploadCancelEsc(evt) {
+function onUploadEsc(evt) {
   if (evt.key === 'Escape' && document.activeElement !== hashtagInput && document.activeElement !== commentInput) {
     evt.preventDefault();
     closeUploadModal();
@@ -59,7 +59,7 @@ function onUploadCancelEsc(evt) {
 
 const onUploadCancelBtn = () => {
   closeUploadModal();
-  document.removeEventListener('keydown', onUploadCancelEsc);
+  document.removeEventListener('keydown', onUploadEsc);
 };
 
 const isValidType = (file) => {
@@ -79,7 +79,7 @@ const onFileChange = () => {
   }
 
   sliderInit();
-  document.addEventListener('keydown', onUploadCancelEsc);
+  document.addEventListener('keydown', onUploadEsc);
 };
 
 const normalizeHashtags = (tagString) => tagString
