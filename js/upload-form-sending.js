@@ -1,10 +1,9 @@
 import {
   closeUploadModal,
   clearFormListener,
-  addFormListener}
+  addFormListener
+}
   from './upload-form.js';
-
-const SERVER_URL_UPLOAD = 'https://32.javascript.htmlacademy.pro/kekstagram';
 
 const submitBtn = document.querySelector('.img-upload__submit');
 const submitBtnDefaultText = submitBtn.textContent;
@@ -14,21 +13,18 @@ const successMessage = successTemplate.cloneNode(true);
 const errorTemplate = document.querySelector('#error').content.querySelector('.error');
 const errorMessage = errorTemplate.cloneNode(true);
 
-const blockSubmitBtn = () => {
-  submitBtn.disabled = true;
-  submitBtn.textContent = submitBtnProcessingtText;
-};
+const SERVER_URL_UPLOAD = 'https://32.javascript.htmlacademy.pro/kekstagram';
 
-const unblockSubmitBtn = () => {
-  submitBtn.disabled = false;
-  submitBtn.textContent = submitBtnDefaultText;
+const blockSubmitBtn = (isBlocked = false) => {
+  submitBtn.disabled = isBlocked;
+  submitBtn.textContent = isBlocked ? submitBtnProcessingtText : submitBtnDefaultText;
 };
 
 function closeMsgByEsc(evt) {
   if (evt.key === 'Escape') {
     evt.preventDefault();
     const plate = document.querySelector('.success') || document.querySelector('.error');
-    if(document.querySelector('.error')){
+    if (document.querySelector('.error')) {
       document.addEventListener('keydown', addFormListener);
     }
     plate.remove();
@@ -55,7 +51,7 @@ const showFeedbackPlate = (resultPlate) => {
 
 export const proceedUpload = (evt) => {
   const formData = new FormData(evt.target);
-  blockSubmitBtn();
+  blockSubmitBtn(true);
   fetch(SERVER_URL_UPLOAD,
     {
       method: 'POST',
@@ -73,7 +69,7 @@ export const proceedUpload = (evt) => {
       showFeedbackPlate(errorMessage);
       clearFormListener();
     })
-    .finally (() => {
-      unblockSubmitBtn();
+    .finally(() => {
+      blockSubmitBtn();
     });
 };

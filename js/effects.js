@@ -1,3 +1,10 @@
+const modal = document.querySelector('.img-upload');
+const previewImage = modal.querySelector('.img-upload__preview img');
+const effectsControl = modal.querySelector('.effects');
+const sliderLanding = modal.querySelector('.effect-level__slider');
+const sliderContainer = modal.querySelector('.img-upload__effect-level');
+const effectLevelElement = modal.querySelector('.effect-level__value');
+
 const Effect = {
   DEFAULT: 'none',
   CHROME: 'chrome',
@@ -49,13 +56,6 @@ const sliderEffectsOptions = {
     unit: ''
   }
 };
-
-const modal = document.querySelector('.img-upload');
-const previewImage = modal.querySelector('.img-upload__preview img');
-const effectsControl = modal.querySelector('.effects');
-const sliderLanding = modal.querySelector('.effect-level__slider');
-const sliderContainer = modal.querySelector('.img-upload__effect-level');
-const effectLevelElement = modal.querySelector('.effect-level__value');
 
 let selectedEffect = Effect.DEFAULT;
 

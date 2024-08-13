@@ -1,5 +1,5 @@
-import {fillModal} from './draw-fullsize.js';
-import {onCloseModalBtn} from './draw-fullsize.js';
+import { fillModal } from './draw-fullsize.js';
+import { onCloseModalBtn } from './draw-fullsize.js';
 
 const posts = document.querySelector('.pictures');
 const postTemplate = document.querySelector('#picture').content.querySelector('.picture');
@@ -15,9 +15,18 @@ const showModal = (evt) => {
   }
 };
 
+const clearPosts = () => {
+  const presentThumbs = document.querySelectorAll('.picture');
+  presentThumbs.forEach((thumb) => {
+    thumb.remove();
+  });
+}
+
 export const drawThumbs = (source) => {
   localData.length = 0;
   localData.push(...source.slice());
+  clearPosts();
+
   source.forEach((filledPost) => {
     const newThumb = postTemplate.cloneNode(true);
     newThumb.querySelector('.picture__img').src = filledPost.url;

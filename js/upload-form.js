@@ -5,16 +5,6 @@ import {
 } from './effects.js';
 import {proceedUpload} from './upload-form-sending.js';
 
-const MAX_HASHTAGS_COUNT = 5;
-const HASHTAD_ALLOWED_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
-const SPACELIKE_CHARS = /\s+/g;
-const VALIDATE_ERROR_MESSAGES = {
-  EXCEED_MAX_COUNT: `Не более ${MAX_HASHTAGS_COUNT} хештегов`,
-  MISMATCH_PATTERN: 'Только буквы и цифры, до 19 знаков после «#»',
-  NOT_UNIQUE: 'Хештеги не должны повторяться',
-};
-const PHOTO_TYPES = ['png', 'jpg', 'jpeg'];
-
 const pageBody = document.querySelector('body');
 const uploadForm = document.querySelector('.img-upload__form');
 const uploadOverlay = document.querySelector('.img-upload__overlay');
@@ -25,6 +15,16 @@ const commentInput = document.querySelector('.text__description');
 const fileField = document.querySelector('.img-upload__input');
 const photoPreview = document.querySelector('.img-upload__preview img');
 const effectsPreviews = document.querySelectorAll('.effects__preview');
+
+const MAX_HASHTAGS_COUNT = 5;
+const HASHTAD_ALLOWED_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
+const SPACELIKE_CHARS = /\s+/g;
+const VALIDATE_ERROR_MESSAGES = {
+  EXCEED_MAX_COUNT: `Не более ${MAX_HASHTAGS_COUNT} хештегов`,
+  MISMATCH_PATTERN: 'Только буквы и цифры, до 19 знаков после «#»',
+  NOT_UNIQUE: 'Хештеги не должны повторяться',
+};
+const PHOTO_TYPES = ['png', 'jpg', 'jpeg'];
 
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
@@ -111,6 +111,7 @@ pristine.addValidator(
   3,
   false
 );
+
 pristine.addValidator(
   hashtagInput,
   hasUniqueTags,
@@ -118,6 +119,7 @@ pristine.addValidator(
   2,
   false
 );
+
 pristine.addValidator(
   hashtagInput,
   hasValidTags,
