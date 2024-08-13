@@ -13,7 +13,7 @@ const DEBOUNCE_TIME = 500;
 const receivedPosts = [];
 
 const setActiveButton = (activeSortingBtn) => {
-  document.querySelector('.img-filters__button--active').classList.remove('img-filters__button--active')
+  document.querySelector('.img-filters__button--active').classList.remove('img-filters__button--active');
   activeSortingBtn.classList.add('img-filters__button--active');
 };
 
