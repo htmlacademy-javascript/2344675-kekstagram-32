@@ -47,6 +47,12 @@ function closeMsgByClick(evt) {
   document.removeEventListener('keydown', closeMsgByEsc);
 }
 
+const showFeedbackPlate = (resultPlate) => {
+  document.body.appendChild(resultPlate);
+  document.addEventListener('click', closeMsgByClick);
+  document.addEventListener('keydown', closeMsgByEsc);
+};
+
 export const proceedUpload = (evt) => {
   const formData = new FormData(evt.target);
   blockSubmitBtn();
@@ -57,18 +63,14 @@ export const proceedUpload = (evt) => {
     })
     .then((response) => {
       if (response.ok) {
-        document.body.appendChild(successMessage);
+        showFeedbackPlate(successMessage);
         closeUploadModal();
-        document.addEventListener('click', closeMsgByClick);
-        document.addEventListener('keydown', closeMsgByEsc);
       } else {
-        throw new Error('Полученный ответ сервера <> "OK"');
+        throw new Error('Полученный ответ сервера - не 200 "OK"');
       }
     })
     .catch(() => {
-      document.body.appendChild(errorMessage);
-      document.addEventListener('click', closeMsgByClick);
-      document.addEventListener('keydown', closeMsgByEsc);
+      showFeedbackPlate(errorMessage);
       clearFormListener();
     })
     .finally (() => {
