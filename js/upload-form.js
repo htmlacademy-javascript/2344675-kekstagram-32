@@ -5,16 +5,6 @@ import {
 } from './effects.js';
 import {proceedUpload} from './upload-form-sending.js';
 
-const MAX_HASHTAGS_COUNT = 5;
-const HASHTAD_ALLOWED_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
-const SPACELIKE_CHARS = /\s+/g;
-const VALIDATE_ERROR_MESSAGES = {
-  EXCEED_MAX_COUNT: `Не более ${MAX_HASHTAGS_COUNT} хештегов`,
-  MISMATCH_PATTERN: 'Только буквы и цифры, до 19 знаков после «#»',
-  NOT_UNIQUE: 'Хештеги не должны повторяться',
-};
-const PHOTO_TYPES = ['png', 'jpg', 'jpeg'];
-
 const pageBody = document.querySelector('body');
 const uploadForm = document.querySelector('.img-upload__form');
 const uploadOverlay = document.querySelector('.img-upload__overlay');
@@ -26,6 +16,16 @@ const fileField = document.querySelector('.img-upload__input');
 const photoPreview = document.querySelector('.img-upload__preview img');
 const effectsPreviews = document.querySelectorAll('.effects__preview');
 
+const MAX_HASHTAGS_COUNT = 5;
+const HASHTAD_ALLOWED_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
+const SPACELIKE_CHARS = /\s+/g;
+const VALIDATE_ERROR_MESSAGES = {
+  EXCEED_MAX_COUNT: `Не более ${MAX_HASHTAGS_COUNT} хештегов`,
+  MISMATCH_PATTERN: 'Только буквы и цифры, до 19 знаков после «#»',
+  NOT_UNIQUE: 'Хештеги не должны повторяться',
+};
+const PHOTO_TYPES = ['png', 'jpg', 'jpeg'];
+
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
   errorTextParent: 'img-upload__field-wrapper',
@@ -33,12 +33,12 @@ const pristine = new Pristine(uploadForm, {
 });
 
 export const clearFormListener = () => {
-  document.removeEventListener('keydown', onUploadCancelEsc);
+  document.removeEventListener('keydown', onUploadEsc);
 };
 
 export const addFormListener = () => {
-  document.addEventListener('keydown', onUploadCancelEsc);
-}
+  document.addEventListener('keydown', onUploadEsc);
+};
 
 export const closeUploadModal = () => {
   uploadForm.reset();
@@ -47,19 +47,19 @@ export const closeUploadModal = () => {
   resetEffect();
   uploadOverlay.classList.add('hidden');
   pageBody.classList.remove('modal-open');
-  document.removeEventListener('keydown', onUploadCancelEsc);
+  document.removeEventListener('keydown', onUploadEsc);
 };
 
-function onUploadCancelEsc(evt) {
+function onUploadEsc(evt) {
   if (evt.key === 'Escape' && document.activeElement !== hashtagInput && document.activeElement !== commentInput) {
     evt.preventDefault();
     closeUploadModal();
   }
-};
+}
 
 const onUploadCancelBtn = () => {
   closeUploadModal();
-  document.removeEventListener('keydown', onUploadCancelEsc);
+  document.removeEventListener('keydown', onUploadEsc);
 };
 
 const isValidType = (file) => {
@@ -79,14 +79,14 @@ const onFileChange = () => {
   }
 
   sliderInit();
-  document.addEventListener('keydown', onUploadCancelEsc);
+  document.addEventListener('keydown', onUploadEsc);
 };
 
 const normalizeHashtags = (tagString) => tagString
-.replaceAll(SPACELIKE_CHARS, ' ')
-.trim()
-.split(' ')
-.filter((tag) => Boolean(tag.length));
+  .replaceAll(SPACELIKE_CHARS, ' ')
+  .trim()
+  .split(' ')
+  .filter((tag) => Boolean(tag.length));
 
 const hasValidTags = (value) => normalizeHashtags(value).every((tag) => HASHTAD_ALLOWED_SYMBOLS.test(tag));
 
@@ -97,12 +97,10 @@ const hasUniqueTags = (value) => {
   return LowerCaseTags.length === new Set(LowerCaseTags).size;
 };
 
-
 const onUploadSubmit = (evt) => {
   evt.preventDefault();
   if(pristine.validate()) {
     proceedUpload(evt);
-    // closeUploadModal();
   }
 };
 
@@ -113,6 +111,7 @@ pristine.addValidator(
   3,
   false
 );
+
 pristine.addValidator(
   hashtagInput,
   hasUniqueTags,
@@ -120,6 +119,7 @@ pristine.addValidator(
   2,
   false
 );
+
 pristine.addValidator(
   hashtagInput,
   hasValidTags,
@@ -131,7 +131,3 @@ pristine.addValidator(
 uploadFileInput.addEventListener('change', onFileChange);
 uploadCancelUploadBtn.addEventListener('click', onUploadCancelBtn);
 uploadForm.addEventListener('submit', onUploadSubmit);
-
-
-// ===============================================================================================
-

@@ -1,38 +1,36 @@
-import {closeUploadModal, clearFormListener, addFormListener} from './upload-form.js';
-const SERVER_URL_UPLOAD = 'https://32.javascript.htmlacademy.pro/kekstagram';
+import {
+  closeUploadModal,
+  clearFormListener,
+  addFormListener
+}
+  from './upload-form.js';
+
 const submitBtn = document.querySelector('.img-upload__submit');
 const submitBtnDefaultText = submitBtn.textContent;
 const submitBtnProcessingtText = 'Отправляется...';
-
 const successTemplate = document.querySelector('#success').content.querySelector('.success');
 const successMessage = successTemplate.cloneNode(true);
 const errorTemplate = document.querySelector('#error').content.querySelector('.error');
 const errorMessage = errorTemplate.cloneNode(true);
 
+const SERVER_URL_UPLOAD = 'https://32.javascript.htmlacademy.pro/kekstagram';
 
-const blockSubmitBtn = () => {
-  submitBtn.disabled = true;
-  submitBtn.textContent = submitBtnProcessingtText;
+const blockSubmitBtn = (isBlocked = false) => {
+  submitBtn.disabled = isBlocked;
+  submitBtn.textContent = isBlocked ? submitBtnProcessingtText : submitBtnDefaultText;
 };
-
-const unblockSubmitBtn = () => {
-  submitBtn.disabled = false;
-  submitBtn.textContent = submitBtnDefaultText;
-};
-
 
 function closeMsgByEsc(evt) {
   if (evt.key === 'Escape') {
     evt.preventDefault();
     const plate = document.querySelector('.success') || document.querySelector('.error');
-    if(document.querySelector('.error')){
-      document.addEventListener('keydown', addFormListener)
+    if (document.querySelector('.error')) {
+      document.addEventListener('keydown', addFormListener);
     }
     plate.remove();
-
   }
   document.removeEventListener('keydown', closeMsgByEsc);
-};
+}
 
 function closeMsgByClick(evt) {
   const closeMsgBtn = document.querySelector('.success__button') || document.querySelector('.error__button');
@@ -45,12 +43,15 @@ function closeMsgByClick(evt) {
   document.removeEventListener('keydown', closeMsgByEsc);
 }
 
+const showFeedbackPlate = (resultPlate) => {
+  document.body.appendChild(resultPlate);
+  document.addEventListener('click', closeMsgByClick);
+  document.addEventListener('keydown', closeMsgByEsc);
+};
 
 export const proceedUpload = (evt) => {
   const formData = new FormData(evt.target);
-
-  blockSubmitBtn();
-
+  blockSubmitBtn(true);
   fetch(SERVER_URL_UPLOAD,
     {
       method: 'POST',
@@ -58,26 +59,17 @@ export const proceedUpload = (evt) => {
     })
     .then((response) => {
       if (response.ok) {
-        document.body.appendChild(successMessage);
+        showFeedbackPlate(successMessage);
         closeUploadModal();
-        document.addEventListener('click', closeMsgByClick);
-        document.addEventListener('keydown', closeMsgByEsc);
       } else {
-        throw new Error('Полученный ответ сервера <> "OK"');
+        throw new Error('Полученный ответ сервера - не 200 "OK"');
       }
     })
     .catch(() => {
-      document.body.appendChild(errorMessage);
-
-      document.addEventListener('click', closeMsgByClick);
-      document.addEventListener('keydown', closeMsgByEsc);
+      showFeedbackPlate(errorMessage);
       clearFormListener();
     })
-    .finally (() => {
-      unblockSubmitBtn();
-    })
-  ;
-
-
+    .finally(() => {
+      blockSubmitBtn();
+    });
 };
-

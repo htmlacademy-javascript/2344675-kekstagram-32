@@ -1,46 +1,31 @@
-import { drawThumbs } from "./draw-thumbs";
-import { receivedPosts } from './download-thumbs';
-import { getRandomInt } from "./utils";
-
-const RANDOM_POSTS_AMOUNT = 10;
+import { drawThumbs } from './draw-thumbs';
+import {
+  getRandomInt,
+  debounce
+} from './utils';
 
 const sortControls = document.querySelector('.img-filters');
-const sortSwitchDefault = document.querySelector('#filter-default');
-const sortSwitchRandom = document.querySelector('#filter-random');
-const sortSwitchDiscussed = document.querySelector('#filter-discussed');
+const filtersForm = document.querySelector('.img-filters__form');
 
-let currentSortingMode = 'default';
-sortSwitchDefault.disabled = true;
+const RANDOM_POSTS_AMOUNT = 10;
+const DEBOUNCE_TIME = 500;
 
-const indicateSorting = (active) => {
-  sortSwitchDefault.classList.remove('img-filters__button--active');
-  sortSwitchRandom.classList.remove('img-filters__button--active');
-  sortSwitchDiscussed.classList.remove('img-filters__button--active');
-  active.classList.add('img-filters__button--active');
+const receivedPosts = [];
+
+const setActiveButton = (activeSortingBtn) => {
+  document.querySelector('.img-filters__button--active').classList.remove('img-filters__button--active')
+  activeSortingBtn.classList.add('img-filters__button--active');
 };
 
-const redrawThumbs = (sorted) => {
-  const presentThumbs = document.querySelectorAll('.picture');
-  presentThumbs.forEach((thumb) => {
-    thumb.remove();
-  });
-  drawThumbs(sorted);
+const redrawThumbs = (sortedPosts) => {
+  drawThumbs(sortedPosts);
 };
 
-const sortThumbsDefault = (evt) => {
-  if (currentSortingMode !== 'default') {
-    indicateSorting(evt.target);
-    redrawThumbs(receivedPosts);
-    sortSwitchDefault.disabled = true;
-    sortSwitchDiscussed.disabled = false;
-  }
-  currentSortingMode = 'default';
+const sortThumbsDefault = () => {
+  redrawThumbs(receivedPosts);
 };
 
-const sortThumbsRandom = (evt) => {
-  sortSwitchDefault.disabled = false;
-  sortSwitchDiscussed.disabled = false;
-  indicateSorting(evt.target);
+const sortThumbsRandom = () => {
   let randomizedPostsAmount = 0;
   const randomPosts = [];
   while (randomizedPostsAmount < RANDOM_POSTS_AMOUNT) {
@@ -51,28 +36,41 @@ const sortThumbsRandom = (evt) => {
     }
   }
   redrawThumbs(randomPosts);
-  sortSwitchDefault.disabled = false;
-  currentSortingMode = 'random';
 };
 
 const sortPhotosByComments = (postA, postB) => postB.comments.length - postA.comments.length;
 
-const sortThumbsDiscussed = (evt) => {
-  if (currentSortingMode !== 'discussed') {
-    sortSwitchDefault.disabled = false;
-    sortSwitchDiscussed.disabled = true;
-    indicateSorting(evt.target);
-    const discussedPosts = receivedPosts
-      .slice()
-      .sort(sortPhotosByComments);
-    redrawThumbs(discussedPosts);
-  }
-  currentSortingMode = 'discussed';
+const sortThumbsDiscussed = () => {
+  const discussedPosts = receivedPosts
+    .slice()
+    .sort(sortPhotosByComments);
+  redrawThumbs(discussedPosts);
 };
 
-export const initThumbsSortControl = () => {
+const filters = {
+  'filter-default': sortThumbsDefault,
+  'filter-random': sortThumbsRandom,
+  'filter-discussed': sortThumbsDiscussed
+};
+
+filtersForm.addEventListener('click', debounce((evt) => {
+  const clickedModeButton = evt.target.closest('.img-filters__button');
+  if (clickedModeButton) {
+    const id = clickedModeButton.id;
+    filters[id]();
+  }
+}, DEBOUNCE_TIME));
+
+filtersForm.addEventListener('click', (evt) => {
+  const clickedModeButton = evt.target.closest('.img-filters__button');
+  if (clickedModeButton) {
+    setActiveButton(clickedModeButton);
+  }
+});
+
+export const initThumbsSortControl = (data) => {
+  receivedPosts.length = 0;
+  receivedPosts.push(...data.slice());
   sortControls.classList.remove('img-filters--inactive');
-  sortSwitchDefault.addEventListener('click', sortThumbsDefault);
-  sortSwitchRandom.addEventListener('click', sortThumbsRandom);
-  sortSwitchDiscussed.addEventListener('click', sortThumbsDiscussed);
+  redrawThumbs(receivedPosts);
 };
