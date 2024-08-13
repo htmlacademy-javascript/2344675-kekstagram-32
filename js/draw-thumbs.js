@@ -20,7 +20,7 @@ const clearPosts = () => {
   presentThumbs.forEach((thumb) => {
     thumb.remove();
   });
-}
+};
 
 export const drawThumbs = (source) => {
   localData.length = 0;
