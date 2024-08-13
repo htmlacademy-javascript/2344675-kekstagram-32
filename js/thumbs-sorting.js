@@ -16,19 +16,19 @@ let currentSortingMode = 'default';
 
 sortSwitchDefault.disabled = true;
 
-const indicateSorting = (active) => {
+const indicateSorting = (activeSortingBtn) => {
   sortSwitchDefault.classList.remove('img-filters__button--active');
   sortSwitchRandom.classList.remove('img-filters__button--active');
   sortSwitchDiscussed.classList.remove('img-filters__button--active');
-  active.classList.add('img-filters__button--active');
+  activeSortingBtn.classList.add('img-filters__button--active');
 };
 
-const redrawThumbs = (sorted) => {
+const redrawThumbs = (sortedPosts) => {
   const presentThumbs = document.querySelectorAll('.picture');
   presentThumbs.forEach((thumb) => {
     thumb.remove();
   });
-  drawThumbs(sorted);
+  drawThumbs(sortedPosts);
 };
 
 const sortThumbsDefault = (evt) => {
