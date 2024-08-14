@@ -1,3 +1,5 @@
+import { isEsc } from './utils';
+
 const pageBody = document.querySelector('body');
 const modal = pageBody.querySelector('.big-picture');
 const fullCard = modal.querySelector('.big-picture__preview');
@@ -18,7 +20,7 @@ const closeModal = () => {
 };
 
 const onCloseModalEsc = (evt) => {
-  if (evt.key === 'Escape') {
+  if (isEsc(evt)) {
     evt.preventDefault();
     closeModal();
   }

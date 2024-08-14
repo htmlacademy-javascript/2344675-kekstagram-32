@@ -1,9 +1,12 @@
+import { isEsc } from './utils';
 import {
   closeUploadModal,
   clearFormListener,
   addFormListener
 }
   from './upload-form.js';
+
+const SERVER_URL_UPLOAD = 'https://32.javascript.htmlacademy.pro/kekstagram';
 
 const submitBtn = document.querySelector('.img-upload__submit');
 const submitBtnDefaultText = submitBtn.textContent;
@@ -13,15 +16,13 @@ const successMessage = successTemplate.cloneNode(true);
 const errorTemplate = document.querySelector('#error').content.querySelector('.error');
 const errorMessage = errorTemplate.cloneNode(true);
 
-const SERVER_URL_UPLOAD = 'https://32.javascript.htmlacademy.pro/kekstagram';
-
 const blockSubmitBtn = (isBlocked = false) => {
   submitBtn.disabled = isBlocked;
   submitBtn.textContent = isBlocked ? submitBtnProcessingtText : submitBtnDefaultText;
 };
 
 function closeMsgByEsc(evt) {
-  if (evt.key === 'Escape') {
+  if (isEsc(evt)) {
     evt.preventDefault();
     const plate = document.querySelector('.success') || document.querySelector('.error');
     if (document.querySelector('.error')) {
@@ -30,6 +31,7 @@ function closeMsgByEsc(evt) {
     plate.remove();
   }
   document.removeEventListener('keydown', closeMsgByEsc);
+  document.removeEventListener('click', closeMsgByClick);
 }
 
 function closeMsgByClick(evt) {
