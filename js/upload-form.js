@@ -1,10 +1,10 @@
 import { isEsc } from './utils';
-import {scaleReset} from './upload-scale.js';
+import { scaleReset } from './upload-scale.js';
 import {
   sliderInit,
   resetEffect
 } from './effects.js';
-import {proceedUpload} from './upload-form-sending.js';
+import { proceedUpload } from './upload-form-sending.js';
 
 const MAX_HASHTAGS_COUNT = 5;
 const HASHTAD_ALLOWED_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
