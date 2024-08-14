@@ -3,8 +3,7 @@ import {
   closeUploadModal,
   clearFormListener,
   addFormListener
-}
-  from './upload-form.js';
+} from './upload-form.js';
 
 const SERVER_URL_UPLOAD = 'https://32.javascript.htmlacademy.pro/kekstagram';
 
@@ -29,9 +28,9 @@ function closeMsgByEsc(evt) {
       document.addEventListener('keydown', addFormListener);
     }
     plate.remove();
+    document.removeEventListener('keydown', closeMsgByEsc);
+    document.removeEventListener('click', closeMsgByClick);
   }
-  document.removeEventListener('keydown', closeMsgByEsc);
-  document.removeEventListener('click', closeMsgByClick);
 }
 
 function closeMsgByClick(evt) {
@@ -41,8 +40,8 @@ function closeMsgByClick(evt) {
   if ((evt.target === closeMsgBtn) || (evt.target !== plate)) {
     background.remove();
     document.removeEventListener('click', closeMsgByClick);
+    document.removeEventListener('keydown', closeMsgByEsc);
   }
-  document.removeEventListener('keydown', closeMsgByEsc);
 }
 
 const showFeedbackPlate = (resultPlate) => {
