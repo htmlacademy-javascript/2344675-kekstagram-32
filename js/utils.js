@@ -11,3 +11,5 @@ export function debounce (callback, timeoutDelay = 500) {
     timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
   };
 }
+
+export const isEsc = (evt) => evt.key === 'Escape';

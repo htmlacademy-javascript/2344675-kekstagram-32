@@ -4,11 +4,11 @@ import {
   debounce
 } from './utils';
 
-const sortControls = document.querySelector('.img-filters');
-const filtersForm = document.querySelector('.img-filters__form');
-
 const RANDOM_POSTS_AMOUNT = 10;
 const DEBOUNCE_TIME = 500;
+
+const sortControls = document.querySelector('.img-filters');
+const filtersForm = document.querySelector('.img-filters__form');
 
 const receivedPosts = [];
 
